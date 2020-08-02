@@ -1,0 +1,27 @@
+{
+    "name": "jennosgroup/laratables",
+    "description": "Generate tables for your laravel application through classes",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jenry Ollivierre",
+            "email": "jenry@jenryollivierre.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laratables\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laratables\\Providers\\AppServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
