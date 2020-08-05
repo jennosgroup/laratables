@@ -18,16 +18,6 @@ trait Data
     protected $data = [];
 
     /**
-     * Check if the data is iterable.
-     *
-     * @return bool
-     */
-    public function dataIsIterable(): bool
-    {
-        return is_iterable($this->data) || is_object($this->data);
-    }
-
-    /**
      * Get the data to work with.
      *
      * It is not advised to perform logics inside this method as an override
@@ -58,6 +48,16 @@ trait Data
             return $this->getData()->isNotEmpty();
         }
         return ! empty($this->getData());
+    }
+
+    /**
+     * Check if the data is iterable.
+     *
+     * @return bool
+     */
+    protected function dataIsIterable(): bool
+    {
+        return is_iterable($this->data) || is_object($this->data);
     }
 
     /**
