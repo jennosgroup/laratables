@@ -5,6 +5,7 @@ namespace Laratables\Traits;
 use Illuminate\Support\Collection;
 use Laratables\Exceptions\DataException;
 use Laratables\Exceptions\QueryException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Data
 {
@@ -44,10 +45,17 @@ trait Data
      */
     public function hasData(): bool
     {
-        if ($this->getData() instanceof Collection) {
-            return $this->getData()->isNotEmpty();
+        $data = $this->getData();
+
+        if ($data instanceof Collection) {
+            return $data->isNotEmpty();
         }
-        return ! empty($this->getData());
+
+        if ($data instanceof LengthAwarePaginator) {
+            return $data->total() >= 1;
+        }
+
+        return ! empty($data);
     }
 
     /**
