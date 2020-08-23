@@ -15,8 +15,8 @@ class QueryException extends Exception
      */
     public static function baseQueryMissing()
     {
-        $message = "Your table class does not have a 'baseQuery' method defined.";
-        $message .= " Set a 'baseQuery' method that returns an instance of the query builder (Eloquent or DB) to continue working with a query.";
+        $message = "Your table class does not have a `baseQuery` method defined.";
+        $message .= " Set a `baseQuery` method that returns an instance of the query builder (Eloquent or DB) to continue working with a query.";
 
         return new self($message);
     }
