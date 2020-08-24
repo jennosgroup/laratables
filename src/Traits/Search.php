@@ -8,22 +8,16 @@ trait Search
      * The columns that are searchable.
      *
      * A column does not have to be visible to be searchable.
-     *
-     * @var array
      */
     protected array $searchColumns = [];
 
     /**
      * The search key.
-     *
-     * @var string
      */
     protected string $searchKey = 'search';
 
     /**
      * Should display the search field.
-     *
-     * @var bool
      */
     protected bool $displaySearch = false;
 
@@ -62,7 +56,7 @@ trait Search
     /**
      * Get the search value.
      *
-     * @return string
+     * @return string|null
      */
     public function getSearchValue(): ?string
     {
@@ -96,10 +90,6 @@ trait Search
      */
     public function handleSearchRequest(): self
     {
-        if (empty($this->getSearchColumns())) {
-            return $this;
-        }
-
         $this->handleSearchQuery($this->getSearchValue());
 
         return $this;

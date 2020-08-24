@@ -9,8 +9,6 @@ trait Columns
      *
      * These should be key => value pairs, with the key being an identifier for
      * the column, while the value being the column title.
-     *
-     * @var array
      */
     protected array $columns = [];
 
