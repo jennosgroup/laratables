@@ -24,11 +24,13 @@
                                 {!! $table->generateColumnSortAndOrderInput($id) !!}
 
                                 {{-- Sort Button --}}
-                                <button laratables-id="column-sort-button" type="submit" {!! $table->getElementAttributesStringWithDefaults('sort_button', ['class' => 'laratables-sort-column-button'], ['type', 'laratables-id']) !!}>
-                                    @if ($table->getColumnOrderValue($id) == 'asc')
-                                        {!! $table->getDescSortIconMarkup() !!}
-                                    @elseif ($table->getColumnOrderValue($id) == 'desc')
-                                        {!! $table->getAscSortIconMarkup() !!}
+                                <button laratables-id="column-sort-button" type="submit" {!! $table->getElementAttributesString('sort_button', [], ['type', 'laratables-id']) !!}>
+                                    @if ($order = $table->getColumnOrderValue($id))
+                                        @if ($order == 'desc')
+                                            {!! $table->getAscSortIconMarkup() !!}
+                                        @else
+                                            {!! $table->getDescSortIconMarkup() !!}
+                                        @endif
                                     @else
                                         {!! $table->getAscSortIconMarkup() !!}
                                     @endif
