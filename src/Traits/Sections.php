@@ -42,12 +42,12 @@ trait Sections
     /**
      * The class to use for the current section.
      */
-    protected string $currentSectionClass = 'section-current';
+    protected string $currentSectionClass;
 
     /**
      * The class to use for the non current section.
      */
-    protected string $nonCurrentSectionClass = 'section-non-current';
+    protected string $nonCurrentSectionClass;
 
     /**
      * Check if the active section should be displayed.
