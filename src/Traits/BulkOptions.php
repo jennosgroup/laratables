@@ -12,6 +12,11 @@ trait BulkOptions
     protected bool $displayBulkOptions = false;
 
     /**
+     * The key for the bulk action.
+     */
+    protected string $bulkActionKey = 'bulk_action';
+
+    /**
      * Whether bulk options should be displayed.
      *
      * @return bool
@@ -19,6 +24,16 @@ trait BulkOptions
     public function shouldDisplayBulkOptions(): bool
     {
         return $this->displayBulkOptions;
+    }
+
+    /**
+     * Get the bulk action key.
+     *
+     * @return string
+     */
+    public function getBulkActionKey(): string
+    {
+        return $this->bulkActionKey;
     }
 
     /**
