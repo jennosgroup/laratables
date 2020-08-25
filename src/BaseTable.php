@@ -67,7 +67,7 @@ abstract class BaseTable
      *
      * @return Illuminate\Http\Response
      */
-    public function render()
+    public static function make()
     {
         $table = new static;
 
@@ -87,7 +87,7 @@ abstract class BaseTable
 
         $table->data = $table->generateData($table);
 
-        return view('laratables::table', compact('table'));
+        return $table;
     }
 
     /**
