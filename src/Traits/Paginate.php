@@ -7,70 +7,56 @@ use Laratables\Exceptions\QueryException;
 trait Paginate
 {
     /**
-     * The pagination total.
-     *
-     * Leaving this value as null will allow the laravel default to be used.
-     *
-     * @var int|null
-     */
-    protected ?int $paginationTotal = null;
-
-    /**
-     * The pagination total key.
-     *
-     * @var string
-     */
-    protected string $paginationTotalKey = 'per_page';
-
-    /**
      * The page key.
-     *
-     * @var string
      */
     protected string $pageKey = 'page';
 
     /**
+     * The per page key.
+     */
+    protected string $perPageKey = 'per_page';
+
+    /**
+     * The per page total.
+     */
+    protected int $perPageTotal = 15;
+
+    /**
      * Indicate whether we should paginate the query.
-     *
-     * @var bool
      */
     protected bool $shouldPaginate = true;
 
     /**
      * Indicate whether we should display the pagination links.
-     *
-     * @var bool
      */
     protected bool $shouldDisplayPagination = true;
 
     /**
      * Whether we should display the per page options.
-     *
-     * @var bool
      */
-    protected bool $displayPerPageOptions = false;
+    protected bool $shouldDisplayPerPageOptions = false;
 
     /**
-     * Get the pagination total.
+     * Get the per page total.
      *
-     * @return int|null
+     * @return int
      */
-    public function getPaginationTotal(): ?int
+    public function getPerPageTotal(): int
     {
-        if ($this->hasPaginationRequest()) {
-            return $this->getRequestedPaginationTotal();
+        if ($this->hasPerPageRequest()) {
+            return $this->getRequestedPerPageTotal();
         }
-        return $this->paginationTotal;
+        return $this->perPageTotal;
     }
 
     /**
-     * Check if we have a pagination per page request.
+     * Check if we have a per page request.
      *
      * @return bool
      */
-    public function hasPaginationRequest(): bool
+    public function hasPerPageRequest(): bool
     {
-        return isset($_GET[$this->getPaginationTotalKey()]);
+        return isset($_GET[$this->getPerPageKey()]);
     }
 
     /**
@@ -78,19 +64,19 @@ trait Paginate
      *
      * @return int
      */
-    public function getRequestedPaginationTotal(): int
+    public function getRequestedPerPageTotal(): int
     {
-        return $_GET[$this->getPaginationTotalKey()];
+        return $_GET[$this->getPerPageKey()];
     }
 
     /**
-     * Check if we have a pagination total.
+     * Check if we have a per page total.
      *
      * @return bool
      */
-    public function hasPaginationTotal(): bool
+    public function hasPerPageTotal(): bool
     {
-        return ! empty($this->getPaginationTotal());
+        return ! empty($this->getPerPageTotal());
     }
 
     /**
@@ -98,9 +84,9 @@ trait Paginate
      *
      * @return string
      */
-    public function getPaginationTotalKey(): string
+    public function getPerPageKey(): string
     {
-        return $this->paginationTotalKey;
+        return $this->perPageKey;
     }
 
     /**
@@ -111,6 +97,22 @@ trait Paginate
     public function getPageKey(): string
     {
         return $this->pageKey;
+    }
+
+    /**
+     * Get the page number.
+     *
+     * @return int
+     */
+    public function getPageNumber(): int
+    {
+        $page = $_GET[$this->getPageKey()] ?? 1;
+
+        if (! is_numeric($page) || $page == 0) {
+            return 1;
+        }
+
+        return $page;
     }
 
     /**
@@ -143,7 +145,11 @@ trait Paginate
         if (! $this->hasBaseQuery()) {
             throw QueryException::baseQueryMissing();
         }
-        return $this->getData()->links();
+
+        return $this->getData()
+            ->withQueryString()
+            ->setPageName($this->getPageKey())
+            ->links();
     }
 
     /**
@@ -153,7 +159,7 @@ trait Paginate
      */
     public function shouldDisplayPerPageOptions(): bool
     {
-        return $this->displayPerPageOptions;
+        return $this->shouldDisplayPerPageOptions;
     }
 
     /**
@@ -170,6 +176,8 @@ trait Paginate
             25 => 25,
             50 => 50,
             100 => 100,
+            250 => 250,
+            500 => 500,
         ];
     }
 }

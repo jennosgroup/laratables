@@ -59,16 +59,6 @@ trait Data
     }
 
     /**
-     * Check if the data is iterable.
-     *
-     * @return bool
-     */
-    protected function dataIsIterable(): bool
-    {
-        return is_iterable($this->data) || is_object($this->data);
-    }
-
-    /**
      * Generate the data to work with.
      *
      * By default, this relies on there being a base query to work with. By
@@ -91,10 +81,20 @@ trait Data
             return $instance->getQuery()->get();
         }
 
-        if ($instance->hasPaginationTotal()) {
-            return $instance->getQuery()->paginate($instance->getPaginationTotal());
+        if ($instance->hasPerPageTotal()) {
+            return $instance->getQuery()->paginate($instance->getPerPageTotal());
         }
 
         return $instance->getQuery()->paginate();
+    }
+
+    /**
+     * Check if the data is iterable.
+     *
+     * @return bool
+     */
+    protected function dataIsIterable(): bool
+    {
+        return is_iterable($this->data) || is_object($this->data);
     }
 }
