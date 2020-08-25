@@ -119,8 +119,8 @@ trait Sections
         if ($this->getActiveSectionVisualType() == 'icon') {
             return '<i class="fas fa-th-list"></i>';
         }
-        if ($this->getTrashSectionVisualType() == 'image') {
-            return '<img style="max-height: 100%; height: auto; max-width: 100%; width: auto;" src="'.asset('vendor/laratables/images/active-icon.png').'">';
+        if ($this->getActiveSectionVisualType() == 'image') {
+            return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-section-icon view-list"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>';
         }
     }
 
@@ -135,7 +135,7 @@ trait Sections
             return '<i class="fas fa-trash-alt"></i>';
         }
         if ($this->getTrashSectionVisualType() == 'image') {
-            return '<img style="max-height: 100%; height: auto; max-width: 100%; width: auto;" src="'.asset('vendor/laratables/images/trash-icon.png').'">';
+            return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-section-icon trash"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>';
         }
     }
 
