@@ -25,7 +25,7 @@ trait Checkbox
      *
      * @return string
      */
-    public function getAllCheckboxIdentifier(): string
+    public function getParentCheckboxIdentifier(): string
     {
         return ".laratables-parent-checkbox";
     }
