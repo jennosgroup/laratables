@@ -2,6 +2,8 @@
 
 namespace Laratables\Traits;
 
+use Laratables\Exceptions\QueryException;
+
 trait Search
 {
     /**
@@ -105,7 +107,7 @@ trait Search
     public function handleSearchQuery($value)
     {
         if (! $this->hasBaseQuery()) {
-            return;
+            return QueryException::baseQueryMissing();
         }
 
         $this->getQuery()->where(function ($query) use ($value) {

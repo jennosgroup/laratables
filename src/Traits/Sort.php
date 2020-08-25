@@ -2,6 +2,8 @@
 
 namespace Laratables\Traits;
 
+use Laratables\Exceptions\QueryException;
+
 trait Sort
 {
     /**
@@ -192,7 +194,7 @@ trait Sort
     public function handleSortQuery(array $columns)
     {
         if (! $this->hasBaseQuery()) {
-            return;
+            return QueryException::baseQueryMissing();
         }
 
         foreach ($columns as $column => $order) {
