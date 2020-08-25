@@ -35,9 +35,19 @@ trait Sections
     protected string $currentSection = 'active';
 
     /**
+     * The key for the section.
+     */
+    protected string $sectionKey = 'section';
+
+    /**
      * The class to use for the current section.
      */
     protected string $currentSectionClass = 'section-current';
+
+    /**
+     * The class to use for the non current section.
+     */
+    protected string $nonCurrentSectionClass = 'section-non-current';
 
     /**
      * Check if the active section should be displayed.
@@ -140,6 +150,16 @@ trait Sections
     }
 
     /**
+     * Get the section key.
+     *
+     * @return string
+     */
+    public function getSectionKey(): string
+    {
+        return $this->sectionKey;
+    }
+
+    /**
      * Get the route for the active section.
      *
      * @return string
@@ -167,5 +187,15 @@ trait Sections
     public function getCurrentSectionClass(): ?string
     {
         return $this->currentSectionClass;
+    }
+
+    /**
+     * Get the non current section class.
+     *
+     * @return string|null
+     */
+    public function getNonCurrentSectionClass(): ?string
+    {
+        return $this->nonCurrentSectionClass;
     }
 }
