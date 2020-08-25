@@ -101,7 +101,7 @@ trait Checkbox
      */
     protected function getBodyCheckboxMarkup($item, int $columnNumber, int $rowNumber): string
     {
-        $content = "<div class='checkbox-container checkbox-child-container'>";
+        $content = "<div class='laratables-checkbox-container laratables-checkbox-child-container'>";
         $content .= '<input type="checkbox" name="laratables_checkbox[]" value="'.$this->escape($item->{$this->getIdField()}).'" class="laratables-checkbox laratables-child-checkbox">';
         $content .= "</div>";
 
