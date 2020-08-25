@@ -11,7 +11,9 @@ trait UrlQuery
      */
     public function hasQueryParameters(): bool
     {
-        return url()->current() !== url()->full();
+        $parts = $this->getUrlParts();
+        $queryString = $parts[5] ?? null;
+        return ! empty($queryString);
     }
 
     /**
@@ -60,11 +62,46 @@ trait UrlQuery
     /**
      * Get the query string for the current $_GET request.
      *
-     * @return string
+     * @return string|null
      */
     public function getQueryString(): string
     {
-        $queryString = str_replace(url()->current(), '', url()->full());
-        return preg_replace('/^\?{1}/', '', urldecode($queryString));
+        $parts = $this->getUrlParts();
+        return $parts[5];
+    }
+
+    /**
+     * Get the whitelisted query parameters.
+     *
+     * @return array
+     */
+    public function getWhitelistedQueryParameters(): array
+    {
+        return [
+            $this->getPageKey(),
+            $this->getPaginationTotalKey(),
+            $this->getSearchKey(),
+            $this->getOrderKey(),
+            $this->getSortKey(),
+            $this->getSectionKey(),
+        ];
+    }
+
+    /**
+     * Get the url parts.
+     *
+     * @return array
+     */
+    public function getUrlParts(): array
+    {
+        if ($parts = $this->cache->get('url.parts')) {
+            return $parts;
+        }
+
+        preg_match('/([a-zA-Z]+):\/\/([^\/|\?|:]+):*([0-9]*)\/*([^\?|#]*)\?*([^\#]*)\#*(.*)/', urldecode(url()->full()), $matches);
+
+        $this->cache->put('url.parts', $matches, 0);
+
+        return $matches;
     }
 }
