@@ -14,7 +14,7 @@ trait AttributesString
     public function getWrapperAdditionalAttributesString(): string
     {
         return $this->parseAttributesForOutput([
-            'laratables' => 'yes',
+            'laratables-wrapper' => 'yes',
             'laratables-id' => $this->getId(),
             'laratables-use-ajax' => ($this->shouldUseAjax()) ? 'true' : 'false',
             'laratables-parent-checkbox-id' => $this->getParentCheckboxIdentifier(),
