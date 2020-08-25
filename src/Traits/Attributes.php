@@ -41,6 +41,7 @@ trait Attributes
         'per_page_select' => [],
         'search_input' => [],
         'search_submit' => [],
+        'sort_button' => [],
     ];
 
     /**
@@ -55,11 +56,48 @@ trait Attributes
      *
      * @return string|null
      */
-    public function getElementAttributesString(string $element): ?string
+    public function getElementAttributesString(string $element, array $attributes = [], array $except = [], bool $override = false): ?string
     {
+        if (! empty($attributes) || ! empty($except)) {
+            return $this->getAndMergeElementAttributesString($element, $attributes, $except, $override);
+        }
+
         return $this->parseAttributesForOutput(
             $this->getElementAttributes($element)
         );
+    }
+
+    /**
+     * Get the element attributes with defaults if certain attributes don't exist.
+     *
+     * @param  string  $element
+     * @param  array  $defaults
+     * @param  array  $except
+     *
+     * @return string|null
+     */
+    public function getElementAttributesStringWithDefaults(string $element, array $defaults = [], array $except = []): ?string
+    {
+        $attributes = $this->getElementAttributes($element);
+
+        if (empty($attributes)) {
+            return $this->parseAttributesForOutput($defaults);
+        }
+
+        // Remove the attribute we don't want to fetch
+        foreach ($except as $value) {
+            if (array_key_exists($value, $attributes)) {
+                unset($attributes[$value]);
+            }
+        }
+
+        foreach ($defaults as $defaultAttribute => $defaultValue) {
+            if (! array_key_exists($defaultAttribute, $attributes)) {
+                $attributes[$defaultAttribute] = $defaultValue;
+            }
+        }
+
+        return $this->parseAttributesForOutput($attributes);
     }
 
     /**
