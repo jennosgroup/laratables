@@ -6,8 +6,6 @@ trait Attributes
 {
     /**
      * The attributes storage.
-     *
-     * @var array
      */
     protected array $attributes = [
         'wrapper' => [],
@@ -37,6 +35,7 @@ trait Attributes
         'active_section_container' => [],
         'trash_section_container' => [],
         'search_container' => [],
+        'search_container_inner' => [],
         'bulk_options_select' => [],
         'per_page_select' => [],
         'search_input' => [],
@@ -45,9 +44,9 @@ trait Attributes
     ];
 
     /**
-     * The custom attributes that will be merged into the attributes.
+     * The list of attributes that will be merged with others.
      */
-    protected array $customAttributes = [];
+    protected array $masterAttributes = [];
 
     /**
      * Get element attributes for output as one string.
@@ -129,11 +128,18 @@ trait Attributes
         }
 
         $attributes = $this->attributes;
-        $customAttributes = $this->customAttributes;
+        $masterAttributes = $this->masterAttributes;
 
-        foreach ($customAttributes as $element => $customAttribute) {
-            foreach ($customAttribute as $attribute => $value) {
-                $attributes[$element][$attribute] = $value;
+        foreach ($masterAttributes as $element => $masterAttribute) {
+            foreach ($masterAttribute as $attribute => $value) {
+
+                $currentAttributes = $attributes[$element][$attribute] ?? null;
+
+                if (empty($currentAttributes)) {
+                    $attributes[$element][$attribute] = $value;
+                } else {
+                    $attributes[$element][$attribute] = implode(' ', array_unique(explode(' ', $currentAttributes.' '.$value)));
+                }
             }
         }
 
