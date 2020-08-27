@@ -214,7 +214,7 @@ trait Sort
     public function handleSortQuery(array $columns)
     {
         if (! $this->hasBaseQuery()) {
-            return QueryException::baseQueryMissing();
+            return QueryException::baseQueryMissing(get_class($this));
         }
 
         foreach ($columns as $column => $order) {

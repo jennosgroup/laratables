@@ -7,32 +7,32 @@ trait WrapperContent
     /**
      * Indicate whether we should display the top wrapper top content view.
      */
-    protected bool $displayTopWrapperTopContentView = true;
+    protected bool $shouldDisplayTopWrapperTopContentView = true;
 
     /**
      * Indicate whether we should display the top wrapper middle content view.
      */
-    protected bool $displayTopWrapperMiddleContentView = true;
+    protected bool $shouldDisplayTopWrapperMiddleContentView = true;
 
     /**
      * Indicate whether we should display the top wrapper bottom content view.
      */
-    protected bool $displayTopWrapperBottomContentView = true;
+    protected bool $shouldDisplayTopWrapperBottomContentView = true;
 
     /**
      * Indicate whether we should display the bottom wrapper top content view.
      */
-    protected bool $displayBottomWrapperTopContentView = true;
+    protected bool $shouldDisplayBottomWrapperTopContentView = true;
 
     /**
      * Indicate whether we should display the bottom wrapper middle content view.
      */
-    protected bool $displayBottomWrapperMiddleContentView = true;
+    protected bool $shouldDisplayBottomWrapperMiddleContentView = true;
 
     /**
      * Indicate whether we should display the bottom wrapper bottom content view.
      */
-    protected bool $displayBottomWrapperBottomContentView = true;
+    protected bool $shouldDisplayBottomWrapperBottomContentView = true;
 
     /**
      * Indicate whether we should display the top wrapper top content view.
@@ -41,7 +41,7 @@ trait WrapperContent
      */
     public function shouldDisplayTopWrapperTopContentView(): bool
     {
-        return $this->displayTopWrapperTopContentView;
+        return $this->shouldDisplayTopWrapperTopContentView;
     }
 
     /**
@@ -51,7 +51,7 @@ trait WrapperContent
      */
     public function shouldDisplayTopWrapperMiddleContentView(): bool
     {
-        return $this->displayTopWrapperMiddleContentView;
+        return $this->shouldDisplayTopWrapperMiddleContentView;
     }
 
     /**
@@ -61,7 +61,7 @@ trait WrapperContent
      */
     public function shouldDisplayTopWrapperBottomContentView(): bool
     {
-        return $this->displayTopWrapperBottomContentView;
+        return $this->shouldDisplayTopWrapperBottomContentView;
     }
 
     /**
@@ -71,7 +71,7 @@ trait WrapperContent
      */
     public function shouldDisplayBottomWrapperTopContentView(): bool
     {
-        return $this->displayBottomWrapperTopContentView;
+        return $this->shouldDisplayBottomWrapperTopContentView;
     }
 
     /**
@@ -81,7 +81,7 @@ trait WrapperContent
      */
     public function shouldDisplayBottomWrapperMiddleContentView(): bool
     {
-        return $this->displayBottomWrapperMiddleContentView;
+        return $this->shouldDisplayBottomWrapperMiddleContentView;
     }
 
     /**
@@ -91,7 +91,7 @@ trait WrapperContent
      */
     public function shouldDisplayBottomWrapperBottomContentView(): bool
     {
-        return $this->displayBottomWrapperBottomContentView;
+        return $this->shouldDisplayBottomWrapperBottomContentView;
     }
 
     /**

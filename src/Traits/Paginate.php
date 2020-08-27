@@ -176,8 +176,21 @@ trait Paginate
             25 => 25,
             50 => 50,
             100 => 100,
-            250 => 250,
-            500 => 500,
         ];
+    }
+
+    /**
+     * Get the per page select attributes string.
+     *
+     * @return string
+     */
+    public function getPerPageSelectAttributesString(): string
+    {
+        $attributes = $this->getElementAttributes('per_page_select');
+        $attributes = $this->getAndMergeElementAttributes('bulk_per_page_select', $attributes);
+        $attributes['name'] = $this->getPerPageKey();
+        $attributes['laratables-id'] = 'per-page-select';
+
+        return $this->parseAttributesForOutput($attributes);
     }
 }

@@ -2,16 +2,12 @@
 
     <!-- Bulk Options -->
     @if ($table->shouldDisplayBulkOptions())
-        <div {!! $table->getElementAttributesString('bulk_container') !!}>
-            @include('laratables::partials.bulk-options')
-        </div>
+        @include('laratables::partials.bulk-options')
     @endif
 
     <!-- Page Page -->
     @if ($table->shouldDisplayPerPageOptions())
-        <div {!! $table->getElementAttributesString('per_page_container') !!}>
-            @include('laratables::partials.per-page')
-        </div>
+        @include('laratables::partials.per-page')
     @endif
 </div> <!-- end left column -->
 
@@ -20,21 +16,16 @@
 
     {{-- Active Section --}}
     @if ($table->shouldDisplayActiveSection())
-        <a href="{{ $table->getActiveSectionRoute() }}" {!! $table->getAndMergeElementAttributesString('active_section_container', ['class' => ($table->getCurrentSection() == 'active') ? $table->getCurrentSectionClass() : null], ['href', 'laratables-section', 'laratables-section-active']) !!} laratables-section="active" laratables-section-active="{{ ($table->getCurrentSection() === 'active') ? 'true' : 'false' }}">
-            @include('laratables::partials.active-section')
-        </a>
+        @include('laratables::partials.active-section')
     @endif
 
+    {{-- Trash Section --}}
     @if ($table->shouldDisplayTrashSection() && $table->trashIsEnabled())
-        <a href="{{ $table->getTrashSectionRoute() }}"  {!! $table->getAndMergeElementAttributesString('trash_section_container', ['class' => ($table->getCurrentSection() == 'trash') ? $table->getCurrentSectionClass() : null], ['href', 'laratables-section', 'laratables-section-active']) !!}laratables-section="trash" laratables-section-active="{{ ($table->getCurrentSection() === 'trash') ? 'true' : 'false' }}">
-            @include('laratables::partials.trash-section')
-        </a>
+        @include('laratables::partials.trash-section')
     @endif
 
     {{-- Search --}}
     @if ($table->shouldDisplaySearch())
-        <div {!! $table->getElementAttributesString('search_container') !!}>
-            @include('laratables::partials.search')
-        </div>
+        @include('laratables::partials.search')
     @endif
 </div>

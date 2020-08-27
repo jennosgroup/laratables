@@ -1,6 +1,7 @@
-<form>
+<form {!! $table->getElementAttributesString('bulk', [], ['method']) !!}>
     <input type="hidden" laratables-id="bulk-options-csrf-token" name="_token" value="{{ csrf_token() }}">
     <input type="hidden" laratables-id="bulk-options-method" name="_method" value="">
+
     <input type="hidden" name="{{ $table->getPageKey() }}" value="{{ $table->getPageNumber() }}">
     <input type="hidden" name="{{ $table->getPerPageKey() }}" value="{{ $table->getPerPageTotal() }}">
 
@@ -11,10 +12,10 @@
         @endforeach
     @endif
 
-    <select name="{{ $table->getBulkActionKey() }}" laratables-id="bulk-options-select" {!! $table->getElementAttributesString('bulk_options_select', [], ['name', 'laratables-id']) !!}>
+    <select {!! $table->getBulkSelectAttributesString() !!}>
         <option value="">Select Bulk Option</option>
         @foreach ($table->getBulkOptions() as $option)
-            <option {!! $table->getAndMergeElementAttributesString('', $option, ['title']) !!}>
+            <option {!! $table->getAndMergeElementAttributesString('', $option) !!}>
                 {{ $option['title'] }}
             </option>
         @endforeach

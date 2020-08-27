@@ -1,4 +1,4 @@
-<form method="get">
+<form method="get" {!! $table->getElementAttributesString('per_page', [], ['method']) !!}>
 
     {{-- Add back get parameters except page and per page --}}
     @if ($table->hasQueryParameters())
@@ -7,7 +7,7 @@
         @endforeach
     @endif
 
-    <select name="{{ $table->getPerPageKey() }}" laratables-id="per-page-select" {!! $table->getElementAttributesString('per_page_select', [], ['laratables-id', 'name']) !!}>
+    <select {!! $table->getPerPageSelectAttributesString() !!}>
         <option value="">Entries</option>
         @foreach ($table->getPerPageOptions() as $value => $text)
             @if ($table->getPerPageTotal() == $value)

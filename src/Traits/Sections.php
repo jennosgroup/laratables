@@ -30,24 +30,14 @@ trait Sections
     protected string $trashSectionVisualType = 'image';
 
     /**
-     * The section that is current. Only accepts 'active' or 'trash'.
+     * The section that is current. 'active' and 'trash' is reserved by us.
      */
     protected string $currentSection = 'active';
 
     /**
-     * The key for the section.
+     * The key for the section used in the $_GET request..
      */
     protected string $sectionKey = 'section';
-
-    /**
-     * The class to use for the current section.
-     */
-    protected string $currentSectionClass;
-
-    /**
-     * The class to use for the non current section.
-     */
-    protected string $nonCurrentSectionClass;
 
     /**
      * Check if the active section should be displayed.
@@ -112,31 +102,73 @@ trait Sections
     /**
      * Get the active section visual markup.
      *
-     * @return string
+     * @return string|null
      */
-    public function getActiveSectionVisualMarkup(): string
+    public function getActiveSectionVisualMarkup(): ?string
     {
         if ($this->getActiveSectionVisualType() == 'icon') {
-            return '<i class="fas fa-th-list"></i>';
+            return $this->getActiveSectionIconMarkup();
         }
         if ($this->getActiveSectionVisualType() == 'image') {
-            return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-section-icon view-list"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>';
+            return $this->getActiveSectionImageMarkup();
         }
+        return null;
     }
 
     /**
      * Get the trash section visual markup.
      *
-     * @return string
+     * @return string|null
      */
-    public function getTrashSectionVisualMarkup(): string
+    public function getTrashSectionVisualMarkup(): ?string
     {
         if ($this->getTrashSectionVisualType() == 'icon') {
-            return '<i class="fas fa-trash-alt"></i>';
+            return $this->getTrashSectionIconMarkup();
         }
         if ($this->getTrashSectionVisualType() == 'image') {
-            return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-section-icon trash"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>';
+            return $this->getTrashSectionImageMarkup();
         }
+        return null;
+    }
+
+    /**
+     * Get the active section icon markup.
+     *
+     * @return string
+     */
+    public function getActiveSectionIconMarkup(): string
+    {
+        return '<i class="fas fa-th-list laratables-section-icon laratables-active-section-icon"></i>';
+    }
+
+    /**
+     * Get the active section image markup.
+     *
+     * @return string
+     */
+    public function getActiveSectionImageMarkup(): string
+    {
+        return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-section-icon laratables-active-section-icon"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>';
+    }
+
+    /**
+     * Get the trash section icon markup.
+     *
+     * @return string
+     */
+    public function getTrashSectionIconMarkup(): string
+    {
+        return '<i class="fas fa-trash-alt laratables-section-icon laratables-trash-section-icon"></i>';
+    }
+
+    /**
+     * Get the trash section image markup.
+     *
+     * @return string
+     */
+    public function getTrashSectionImageMarkup(): string
+    {
+        return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-section-icon laratables-trash-section-icon"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>';
     }
 
     /**
@@ -150,7 +182,7 @@ trait Sections
     }
 
     /**
-     * Get the section key.
+     * Get the section key to use in the $_GET request.
      *
      * @return string
      */
@@ -166,7 +198,7 @@ trait Sections
      */
     public function getActiveSectionRoute(): string
     {
-        return '';
+        return '#';
     }
 
     /**
@@ -176,26 +208,118 @@ trait Sections
      */
     public function getTrashSectionRoute(): string
     {
-        return '';
+        return '#';
     }
 
     /**
-     * Get the current section class.
+     * Get the active section attributes string.
      *
-     * @return string|null
+     * @return string
      */
-    public function getCurrentSectionClass(): ?string
+    public function getActiveSectionAttributesString(): string
     {
-        return $this->currentSectionClass;
+        $attributes = $this->getActiveSectionAttributes();
+        $attributes['href'] = $this->getActiveSectionRoute();
+        $attributes['laratables-section'] = 'active';
+        $attributes['laratables-section-active'] = ($this->getCurrentSection() === 'active') ? 'true' : 'false';
+
+        return $this->parseAttributesForOutput($attributes);
     }
 
     /**
-     * Get the non current section class.
+     * Get the trash section attributes string.
      *
-     * @return string|null
+     * @return string
      */
-    public function getNonCurrentSectionClass(): ?string
+    public function getTrashSectionAttributesString(): string
     {
-        return $this->nonCurrentSectionClass;
+        $attributes = $this->getTrashSectionAttributes();
+        $attributes['href'] = $this->getTrashSectionRoute();
+        $attributes['laratables-section'] = 'trash';
+        $attributes['laratables-section-active'] = ($this->getCurrentSection() === 'trash') ? 'true' : 'false';
+
+        return $this->parseAttributesForOutput($attributes);
+    }
+
+    /**
+     * Get the active section attributes.
+     *
+     * @return array
+     */
+    public function getActiveSectionAttributes(): array
+    {
+        $attributes = $this->getElementAttributes('active_section');
+        $attributes = $this->getAndMergeElementAttributes('section', $attributes);
+
+        if ($this->getCurrentSection() == 'active') {
+            $newAttributes = $this->getElementAttributes('active_section_current');
+        } elseif ($this->getCurrentSection() == 'trash') {
+            $newAttributes = $this->getElementAttributes('active_section_not_current');
+        } else {
+            $newAttributes = [];
+        }
+
+        return $this->mergeAttributes($attributes, $newAttributes);
+    }
+
+    /**
+     * Get the trash section attributes.
+     *
+     * @return array
+     */
+    public function getTrashSectionAttributes(): array
+    {
+        $attributes = $this->getElementAttributes('trash_section');
+        $attributes = $this->getAndMergeElementAttributes('section', $attributes);
+
+        if ($this->getCurrentSection() == 'trash') {
+            $newAttributes = $this->getElementAttributes('trash_section_current');
+        } elseif ($this->getCurrentSection() == 'active') {
+            $newAttributes = $this->getElementAttributes('trash_section_not_current');
+        } else {
+            $newAttributes = [];
+        }
+
+        return $this->mergeAttributes($attributes, $newAttributes);
+    }
+
+    /**
+     * Get the current section attributes.
+     *
+     * @return array
+     */
+    public function getCurrentSectionAttributes(): array
+    {
+        $currentSection = $this->getCurrentSection();
+
+        if ($currentSection == 'active') {
+            return $this->getElementAttributes('active_section_current');
+        }
+
+        if ($currentSection == 'trash') {
+            return $this->getElementAttributes('trash_section_current');
+        }
+
+        return [];
+    }
+
+    /**
+     * Get the not current section attributes.
+     *
+     * @return array
+     */
+    public function getNotCurrentSectionAttributes(): array
+    {
+        $currentSection = $this->getCurrentSection();
+
+        if ($currentSection == 'active') {
+            return $this->getElementAttributes('trash_section_not_current');
+        }
+
+        if ($currentSection == 'trash') {
+            return $this->getElementAttributes('active_section_not_current');
+        }
+
+        return [];
     }
 }

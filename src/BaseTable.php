@@ -28,11 +28,6 @@ abstract class BaseTable
     protected ArrayStore $cache;
 
     /**
-     * Whether to use ajax.
-     */
-    protected bool $shouldUseAjax = false;
-
-    /**
      * The unique id for the table.
      */
     protected string $id;
@@ -63,11 +58,11 @@ abstract class BaseTable
     }
 
     /**
-     * Render the table view.
+     * Make the table.
      *
-     * @return Illuminate\Http\Response
+     * @return $this
      */
-    public static function make()
+    public static function make(): self
     {
         $table = new static;
 
@@ -128,16 +123,6 @@ abstract class BaseTable
     public function getNoItemsMessage(): string
     {
         return $this->noItemsMessage;
-    }
-
-    /**
-     * Check whether we should use ajax.
-     *
-     * @return bool
-     */
-    public function shouldUseAjax(): bool
-    {
-        return $this->shouldUseAjax;
     }
 
     /**

@@ -82,7 +82,37 @@ trait Search
      */
     public function getSearchIconMarkup(): string
     {
-        return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="search"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>';
+        return '<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" class="laratables-search-icon"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>';
+    }
+
+    /**
+     * Get the search input attributes string.
+     *
+     * @return string
+     */
+    public function getSearchInputAttributesString(): string
+    {
+        $attributes = $this->getElementAttributes('search_input');
+        $attributes['laratables-id'] = 'search-input';
+        $attributes['type'] = 'search';
+        $attributes['name'] = $this->getSearchKey();
+        $attributes['value'] = $this->getSearchValue();
+
+        return $this->parseAttributesForOutput($attributes);
+    }
+
+    /**
+     * Get the search button attributes string.
+     *
+     * @return string
+     */
+    public function getSearchButtonAttributesString(): string
+    {
+        $attributes = $this->getElementAttributes('search_submit');
+        $attributes['laratables-id'] = 'search-submit';
+        $attributes['type'] = 'submit';
+
+        return $this->parseAttributesForOutput($attributes);
     }
 
     /**
@@ -117,7 +147,7 @@ trait Search
     public function handleSearchQuery($value)
     {
         if (! $this->hasBaseQuery()) {
-            return QueryException::baseQueryMissing();
+            return QueryException::baseQueryMissing(get_class($this));
         }
 
         $this->getQuery()->where(function ($query) use ($value) {

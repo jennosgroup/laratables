@@ -15,6 +15,6 @@ class DataException extends Exception
      */
     public static function notIterable()
     {
-        return new self('The data given for the table is not iterable.');
+        return new self('The data generated for the table to work with is not iterable.');
     }
 }

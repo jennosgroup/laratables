@@ -28,7 +28,7 @@ trait TableContentOutput
             return $this->$method($columnId, $columnTitle, $columnNumber, $position);
         }
 
-        return $this->escape($columnTitle);
+        return $this->output($columnTitle);
     }
 
     /**
@@ -54,7 +54,7 @@ trait TableContentOutput
         }
 
         return $item->{$columnId}
-            ? $this->escape($item->{$columnId})
-            : ($item[$columnId] ? $this->escape($item[$columnId]) : null);
+            ? $this->output($item->{$columnId})
+            : ($item[$columnId] ? $this->output($item[$columnId]) : null);
     }
 }

@@ -37,6 +37,21 @@ trait BulkOptions
     }
 
     /**
+     * Get the bulk select attributes string.
+     *
+     * @return string
+     */
+    public function getBulkSelectAttributesString(): string
+    {
+        $attributes = $this->getElementAttributes('bulk_options_select');
+        $attributes = $this->getAndMergeElementAttributes('bulk_per_page_select', $attributes);
+        $attributes['name'] = $this->getBulkActionKey();
+        $attributes['laratables-id'] = 'bulk-options-select';
+
+        return $this->parseAttributesForOutput($attributes);
+    }
+
+    /**
      * Get the bulk options.
      *
      * Expected results is an array of associated arrays.

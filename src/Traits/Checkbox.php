@@ -10,6 +10,11 @@ trait Checkbox
     protected bool $hasCheckbox = false;
 
     /**
+     * The name attribute for the checkbox.
+     */
+    protected string $checkboxName = 'laratables_checkbox[]';
+
+    /**
      * Check whether checkbox is enabled.
      *
      * @return bool
@@ -20,25 +25,13 @@ trait Checkbox
     }
 
     /**
-     * Get the identifier to target when we want to detect that we should check
-     * all the checkboxes, when the checkbox is checked in the head/foot section
+     * Get the checkbox name.
      *
      * @return string
      */
-    public function getParentCheckboxIdentifier(): string
+    public function getCheckboxName(): string
     {
-        return ".laratables-parent-checkbox";
-    }
-
-    /**
-     * Get the identifier to target when we want to detect which checkboxes in the
-     * tbody are checked.
-     *
-     * @return string
-     */
-    public function getBodyCheckboxIdentifier(): string
-    {
-        return ".laratables-child-checkbox";
+        return $this->checkboxName;
     }
 
     /**
@@ -58,6 +51,7 @@ trait Checkbox
         if ($position == 'foot') {
             return $this->getFootCheckboxMarkup($columnNumber);
         }
+        return null;
     }
 
     /**
@@ -83,8 +77,17 @@ trait Checkbox
      */
     protected function getHeadCheckboxMarkup(int $columnNumber): string
     {
-        $content = "<div class='laratables-checkbox-container laratables-top-checkbox-container laratables-checkbox-parent-container'>";
-        $content .= "<input type='checkbox' class='laratables-checkbox laratables-top-checkbox laratables-parent-checkbox'>";
+        $containerAttributes = $this->getElementAttributes('checkbox_parent');
+        $containerAttributes = $this->getAndMergeElementAttributes('checkbox', $containerAttributes);
+        $containerAttributes['laratables-id'] = 'checkbox-parent-container';
+
+        $checkboxAttributes = $this->getElementAttributes('checkbox_input_parent');
+        $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
+        $checkboxAttributes['laratables-id'] = 'checkbox-parent';
+        $checkboxAttributes['type'] = 'checkbox';
+
+        $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
+        $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
         $content .= "</div>";
 
         return $content;
@@ -101,8 +104,17 @@ trait Checkbox
      */
     protected function getBodyCheckboxMarkup($item, int $columnNumber, int $rowNumber): string
     {
-        $content = "<div class='laratables-checkbox-container laratables-checkbox-child-container'>";
-        $content .= '<input type="checkbox" name="laratables_checkbox[]" value="'.$this->escape($item->{$this->getIdField()}).'" class="laratables-checkbox laratables-child-checkbox">';
+        $containerAttributes = $this->getElementAttributes('checkbox_child');
+        $containerAttributes = $this->getAndMergeElementAttributes('checkbox', $containerAttributes);
+        $containerAttributes['laratables-id'] = 'checkbox-child-container';
+
+        $checkboxAttributes = $this->getElementAttributes('checkbox_input_child');
+        $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
+        $checkboxAttributes['laratables-id'] = 'checkbox-child';
+        $checkboxAttributes['type'] = 'checkbox';
+
+        $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
+        $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
         $content .= "</div>";
 
         return $content;
@@ -117,8 +129,17 @@ trait Checkbox
      */
     protected function getFootCheckboxMarkup(int $columnNumber): string
     {
-        $content = "<div class='laratables-checkbox-container laratables-bottom-checkbox-container laratables-checkbox-parent-container'>";
-        $content .= "<input type='checkbox' class='laratables-checkbox laratables-bottom-checkbox laratables-parent-checkbox'>";
+        $containerAttributes = $this->getElementAttributes('checkbox_parent');
+        $containerAttributes = $this->getAndMergeElementAttributes('checkbox', $containerAttributes);
+        $containerAttributes['laratables-id'] = 'checkbox-parent-container';
+
+        $checkboxAttributes = $this->getElementAttributes('checkbox_input_parent');
+        $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
+        $checkboxAttributes['laratables-id'] = 'checkbox-parent';
+        $checkboxAttributes['type'] = 'checkbox';
+
+        $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
+        $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
         $content .= "</div>";
 
         return $content;

@@ -1,5 +1,4 @@
-<form method="get" {!! $table->getElementAttributesString('search_container_inner', [], ['method']) !!}>
-
+<form method="get" {!! $table->getElementAttributesString('search', [], ['method']) !!}>
     {{-- Add get parameters except page & search --}}
     @if ($table->hasQueryParameters())
         @foreach ($table->getQueryParameters($table->getPageKey(), $table->getSearchKey()) as $key => $value)
@@ -7,11 +6,9 @@
         @endforeach
     @endif
 
-    <input laratables-id="search-input" type="search" name="{{ $table->getSearchKey() }}" value="{{ $table->getSearchValue() }}" {!! $table->getElementAttributesString('search_input', [], ['type', 'name', 'value', 'laratables-id']) !!}>
+    <input {!! $table->getSearchInputAttributesString() !!}>
 
-    @if (! $table->shouldUseAjax())
-        <button laratables-id="search-submit" type="submit" {!! $table->getElementAttributesString('search_submit', [], ['type', 'laratables-id']) !!}>
-            {!! $table->getSearchIconMarkup() !!}
-        </button>
-    @endif
+    <button {!! $table->getSearchButtonAttributesString() !!}>
+        {!! $table->getSearchIconMarkup() !!}
+    </button>
 </form>

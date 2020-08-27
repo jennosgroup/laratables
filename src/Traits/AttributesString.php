@@ -16,9 +16,7 @@ trait AttributesString
         return $this->parseAttributesForOutput([
             'laratables-wrapper' => 'yes',
             'laratables-id' => $this->getId(),
-            'laratables-use-ajax' => ($this->shouldUseAjax()) ? 'true' : 'false',
-            'laratables-parent-checkbox-id' => $this->getParentCheckboxIdentifier(),
-            'laratables-body-checkbox-id' => $this->getBodyCheckboxIdentifier(),
+            'laratables-checkbox-name' => $this->getCheckboxName(),
         ]);
     }
 
