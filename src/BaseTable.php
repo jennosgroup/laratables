@@ -2,6 +2,7 @@
 
 namespace Laratables;
 
+use Illuminate\View\View;
 use Illuminate\Support\Str;
 use Illuminate\Cache\ArrayStore;
 
@@ -26,6 +27,11 @@ abstract class BaseTable
      * The cache store.
      */
     protected ArrayStore $cache;
+
+    /**
+     * The view options.
+     */
+    protected array $viewOptions = [];
 
     /**
      * The unique id for the table.
@@ -58,6 +64,25 @@ abstract class BaseTable
     }
 
     /**
+     * Return the view.
+     *
+     * @param  string  $path
+     * @param  array  $options
+     *
+     * @return Illuminate\View\View
+     */
+    public static function view(string $path, array $options = []): View
+    {
+        $table = static::make();
+
+        $options['table'] = $table;
+
+        $table->viewOptions = $options;
+
+        return view($path, $options);
+    }
+
+    /**
      * Make the table.
      *
      * @return $this
@@ -83,6 +108,24 @@ abstract class BaseTable
         $table->data = $table->generateData($table);
 
         return $table;
+    }
+
+    /**
+     * Render the table view.
+     *
+     * @param  array  $options
+     *
+     * @return Illuminate\View\View
+     */
+    public function render(array $options = []): View
+    {
+        $table = $this->viewOptions['table'];
+
+        $options = array_merge($this->viewOptions, $options);
+
+        $options['table'] = $table;
+
+        return view('laratables::table', $options);
     }
 
     /**
