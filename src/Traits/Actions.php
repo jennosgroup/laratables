@@ -78,22 +78,26 @@ trait Actions
     public function getActionQueryParameters(string $action): array
     {
         $results = [];
-        $method = 'get'.ucwords($action).'ActionAllowedQueryParameters';
+        $blacklist = [];
 
-        if (! method_exists($this, $method)) {
+        $method = 'get'.ucwords($action).'ActionQueryParametersBlacklist';
+
+        if (method_exists($this, $method)) {
+            $blacklist = $this->$method();
+        }
+
+        if ($blacklist == true) {
             return [];
         }
 
-        $whitelist = $this->$method();
-
         foreach ($this->getQueryParameters() as $key => $value) {
-            if (in_array($key, $whitelist)) {
+            if (! in_array($key, $blacklist)) {
                 $results[$key] = $value;
             }
         }
 
         // If user wants the page key and it's not there as a $_GET attribute, add 1 as the default
-        if (in_array($this->getPageKey(), $whitelist) && ! array_key_exists($this->getPageKey(), $results)) {
+        if (! in_array($this->getPageKey(), $blacklist) && ! array_key_exists($this->getPageKey(), $results)) {
             $results[$this->getPageKey()] = 1;
         }
 

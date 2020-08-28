@@ -51,7 +51,12 @@ trait UrlQuery
 
         foreach ($queryParameters as $parameter) {
 
+            if (empty($parameter)) {
+                continue;
+            }
+
             $parts = explode('=', $parameter);
+
             $key = $parts[0];
             $value = $parts[1];
 

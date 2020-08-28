@@ -44,7 +44,7 @@ const Swal = require('sweetalert2');
                 // Create form input
                 var inputElement = document.createElement('input');
                 inputElement.setAttribute('type', 'hidden');
-                inputElement.setAttribute('name', checkboxName);
+                inputElement.setAttribute('name', checkboxName+'[]');
                 inputElement.setAttribute('value', checkbox.value);
 
                 // Add to existing form
@@ -94,6 +94,10 @@ const Swal = require('sweetalert2');
                 methodElement.setAttribute('name', '_method');
                 methodElement.setAttribute('value', requestType);
             }
+
+            // Set the method and action
+            form.setAttribute('method', method);
+            form.setAttribute('action', route);
 
             // Finally we submit the form
             form.submit();

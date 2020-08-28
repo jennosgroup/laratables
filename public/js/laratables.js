@@ -3323,7 +3323,7 @@ var Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/di
 
         var inputElement = document.createElement('input');
         inputElement.setAttribute('type', 'hidden');
-        inputElement.setAttribute('name', checkboxName);
+        inputElement.setAttribute('name', checkboxName + '[]');
         inputElement.setAttribute('value', checkbox.value); // Add to existing form
 
         form.appendChild(inputElement);
@@ -3368,8 +3368,11 @@ var Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/di
         var methodElement = form.querySelector("input[laratables-id='bulk-options-method']");
         methodElement.setAttribute('name', '_method');
         methodElement.setAttribute('value', requestType);
-      } // Finally we submit the form
+      } // Set the method and action
 
+
+      form.setAttribute('method', method);
+      form.setAttribute('action', route); // Finally we submit the form
 
       form.submit();
     };

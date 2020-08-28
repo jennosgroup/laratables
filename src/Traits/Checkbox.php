@@ -12,7 +12,7 @@ trait Checkbox
     /**
      * The name attribute for the checkbox.
      */
-    protected string $checkboxName = 'laratables_checkbox[]';
+    protected string $checkboxName = 'laratables_checkbox';
 
     /**
      * Check whether checkbox is enabled.
@@ -112,6 +112,8 @@ trait Checkbox
         $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
         $checkboxAttributes['laratables-id'] = 'checkbox-child';
         $checkboxAttributes['type'] = 'checkbox';
+        $checkboxAttributes['value'] = $item->{$this->getIdField()};
+        $checkboxAttributes['name'] = $this->getCheckboxName().'[]';
 
         $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
         $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
