@@ -55,6 +55,19 @@ trait Attributes
         'checkbox_input' => [],
         'checkbox_input_parent' => [],
         'checkbox_input_child' => [],
+        'actions' => [],
+        'actions_button' => [],
+        'actions_link' => [],
+        'view_action_button' => [],
+        'edit_action_button' => [],
+        'trash_action_button' => [],
+        'restore_action_button' => [],
+        'delete_action_button' => [],
+        'view_action_link' => [],
+        'edit_action_link' => [],
+        'trash_action_link' => [],
+        'restore_action_link' => [],
+        'delete_action_link' => [],
     ];
 
     /**

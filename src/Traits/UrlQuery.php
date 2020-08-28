@@ -19,7 +19,7 @@ trait UrlQuery
     /**
      * Get the currently submitted url query string parameters.
      *
-     * @param  array|string  $except
+     * @param  array|string|null  $except
      *
      * @return array
      */
@@ -35,13 +35,17 @@ trait UrlQuery
     /**
      * Build the array for the query parameters.
      *
-     * @param  array  $except
+     * @param  array|string|null  $except
      *
      * @return array
      */
-    public function buildQueryParameters(array $except = []): array
+    public function buildQueryParameters($except = null): array
     {
         $output = [];
+
+        if (! is_array($except)) {
+            $except = func_get_args();
+        }
 
         $queryParameters = explode('&', $this->getQueryString());
 
@@ -79,7 +83,7 @@ trait UrlQuery
     {
         return [
             $this->getPageKey(),
-            $this->getPaginationTotalKey(),
+            $this->getPerPageKey(),
             $this->getSearchKey(),
             $this->getOrderKey(),
             $this->getSortKey(),

@@ -8,20 +8,21 @@ use Illuminate\Cache\ArrayStore;
 
 abstract class BaseTable
 {
-    use Traits\Data;
-    use Traits\Sort;
-    use Traits\Query;
-    use Traits\Search;
-    use Traits\Columns;
-    use Traits\Checkbox;
-    use Traits\Paginate;
-    use Traits\UrlQuery;
-    use Traits\Sections;
-    use Traits\Attributes;
-    use Traits\BulkOptions;
-    use Traits\WrapperContent;
-    use Traits\AttributesString;
-    use Traits\TableContentOutput;
+    use Traits\Data,
+    Traits\Sort,
+    Traits\Query,
+    Traits\Search,
+    Traits\Columns,
+    Traits\Actions,
+    Traits\Checkbox,
+    Traits\Paginate,
+    Traits\UrlQuery,
+    Traits\Sections,
+    Traits\Attributes,
+    Traits\BulkOptions,
+    Traits\WrapperContent,
+    Traits\AttributesString,
+    Traits\TableContentOutput;
 
     /**
      * The cache store.
