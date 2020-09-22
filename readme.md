@@ -8,6 +8,7 @@
 4. [Getting Started](#getting-started)
 5. [Columns](#columns)
 6. [Sortable Columns](#sortable-columns)
+7. [Searchable Columns](#searchable-columns)
 
 ## About
 
@@ -90,21 +91,68 @@ If your column array key matches your data item property, the content of that pr
 
 ## Sortable Columns
 
-To make columns sortable, define a protected $sortColumns property in your class, and add an array containing the column ids of the columns you wish to be sortable.
+To make columns sortable, list the id of the columns that you wish to be sortable.
 
 ```php
+<?php
+
+namespace App\Tables;
 
 class PostsListingTable extends Laratables\BaseTable
 {
     // .....
 
-    protected $sortColumns = [
+    /**
+     * The sortable columns.
+     */
+    protected array $sortColumns = [
         'first_name', 'last_name',
     ];
 }
 ```
 
-### Making Columns Searchable
+You can customize the sort and order key that will be used in the GET request.
+
+```php
+<?php
+
+namespace App\Tables;
+
+class PostsListingTable extends Laratables\BaseTable
+{
+    // ....
+
+    /**
+     * The sort by key, which holds the column/identifier to sort by.
+     */
+    protected string $sortKey = 'sort_by';
+
+    /**
+     * The order key which holds the 'asc' or 'desc' value.
+     */
+    protected string $orderKey = 'order';
+}
+```
+
+By default, multiple sorting is turned on. If you don't want multiple sorting, you can disable it.
+
+```php
+<?php
+
+namespace App\Tables;
+
+class PostsListingTable extends Laratables\BaseTable
+{
+    // ....
+
+    /**
+     * Whether to allow multiple sorting.
+     */
+    protected bool $allowMultipleSorting = false;
+}
+```
+
+## Searchable Columns
 
 To make columns searchable, define a protected $searchColumns property in your class, and add an array containing the column ids of the columns you wish to be searchable.
 
