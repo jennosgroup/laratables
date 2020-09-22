@@ -1,8 +1,15 @@
 # Laratables
 
+## Table Of Contents
+
+1. [About](#about)
+2. [Installation](#installation)
+3. [Setup](#setup)
+4. [Getting Started](#getting-started)
+
 ## About
 
-Laratables is a package that allows you to generate html tables for your laravel application. The table are seemlessly generated through good ole php classes.
+Laratables is a laravel package that allows you to seemlessly generate tables by using PHP classes, which Laravel developers are more comfortable working with.
 
 ## Installation
 
@@ -10,9 +17,9 @@ Install through composer command `composer require jennosgroup/laratables`.
 
 ## Setup
 
-Config
-Views
-Assets
+Publish the package assets with artisan command `php artisan vendor:publish --tag=laratables-assets`. Then include the `laratables.js` script file in your mark `<script src="{{ asset('vendor/laratables/js/laratables.js') }}"></script>`.
+
+## Getting Started
 
 Start by creating a class that extends `Laratables\BaseTable`.
 
@@ -33,7 +40,7 @@ To start things off, the table needs data to work with. There are a few ways to 
 class PostsListingTable extends Laratables\BaseTable
 {
     //....
-    
+
     /**
      * The base query to build upon.
      *
@@ -48,7 +55,7 @@ class PostsListingTable extends Laratables\BaseTable
 
 ### Adding Columns
 
-To add a column, add an associative array to a protected $columns property. The array key is the column id while the array value is the displayable title of the column. 
+To add a column, add an associative array to a protected $columns property. The array key is the column id while the array value is the displayable title of the column.
 
 ```php
 
@@ -286,7 +293,7 @@ To indicate that columns are sortable, add the list of columns that should be so
 class PostsListingTable extends Laratables\BaseTable
 {
     //....
-    
+
     /**
      * The columns that should be sortable.
      *
@@ -323,7 +330,7 @@ class PostsListingTable extends Laratables\BaseTable
 }
 ```
 
-The above method is only called when columns are submitted for sorting, so there is no need to check if array is empty. 
+The above method is only called when columns are submitted for sorting, so there is no need to check if array is empty.
 
 If you're relying on the query builder, always use the `getQuery` method on the class to chain the methods, so it continues to build on the base query defined.
 
@@ -370,7 +377,7 @@ To indicate that columns are searchable, add the list of columns that should be 
 class PostsListingTable extends Laratables\BaseTable
 {
     //....
-    
+
     /**
      * The columns that should be searched.
      *
