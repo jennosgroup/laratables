@@ -9,6 +9,7 @@
 5. [Columns](#columns)
 6. [Sortable Columns](#sortable-columns)
 7. [Searchable Columns](#searchable-columns)
+8. [Pagination](#pagination)
 
 ## About
 
@@ -220,7 +221,58 @@ class PostsListingTable extends Laratables\BaseTable
         });
     }
 }
+```
 
+## Pagination
+
+Pagination is enabled by default, but you can control some things in relation to it.
+
+To customize the page, per page and page total used in the GET request, define a `pageKey`, `perPageKey` and `perPageTotal` property and set a value to it.
+
+If you want to turn off pagination from your results, set the `shouldPaginate` property to false. Be very careful of this, as this will return your entire result set.
+
+If you want to turn off the display of the pagination links, set the `shouldDisplayPagination` property to false.
+
+Also, if you wish to have a per page dropdown list to toggle per page views, set the `shouldDisplayPerPageOptions` to true.
+
+```php
+<?php
+
+namespace App\Tables;
+
+class PostsListingTable extends Laratables\BaseTable
+{
+    /**
+     * The page key.
+     */
+    protected string $pageKey = 'page';
+
+    /**
+     * The per page key.
+     */
+    protected string $perPageKey = 'per_page';
+
+    /**
+     * The per page total.
+     */
+    protected int $perPageTotal = 15;
+
+    /**
+     * Indicate whether we should paginate the query.
+     */
+    protected bool $shouldPaginate = true;
+
+    /**
+     * Indicate whether we should display the pagination links.
+     */
+    protected bool $shouldDisplayPagination = true;
+
+    /**
+     * Whether we should display the per page options.
+     */
+    protected bool $shouldDisplayPerPageOptions = false;
+}
+```
 
 ### Setting Data
 
