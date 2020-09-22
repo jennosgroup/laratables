@@ -80,9 +80,9 @@ class PostsListingTable extends Laratables\BaseTable
      * The table columns.
      */
     protected array $columns = [
-        'first_name' => 'First Name',
-        'last_name' => 'Last Name',
-        'date_of_birth' => 'Birth Date',
+        'title' => 'Title',
+        'slug' => 'slug',
+        'author' => 'Author',
     ];
 }
 ```
@@ -106,7 +106,7 @@ class PostsListingTable extends Laratables\BaseTable
      * The sortable columns.
      */
     protected array $sortColumns = [
-        'first_name', 'last_name',
+        'title', 'slug',
     ];
 }
 ```
@@ -154,19 +154,73 @@ class PostsListingTable extends Laratables\BaseTable
 
 ## Searchable Columns
 
-To make columns searchable, define a protected $searchColumns property in your class, and add an array containing the column ids of the columns you wish to be searchable.
+To make columns searchable, define a `searchColumns` array property and list the ids of the columns that you want to be included in the search.
+
+You can also customize the search key which will be used in the GET request for the search. Define a 'searchKey' property and set the value.
+
+By default, a search field is not displayed. If you would like one generated for you, set the `displaySearch` property to true.
 
 ```php
+<?php
+
+namespace App\Tables;
 
 class PostsListingTable extends Laratables\BaseTable
 {
     // .....
 
-    protected $searchColumns = [
-        'first_name', 'last_name', 'status',
+    /**
+     * The columns that are searchable.
+     */
+    protected array $searchColumns = [
+        'title', 'slug',
     ];
+
+    /**
+     * The search key to use in the GET request.
+     */
+    protected string $searchKey = 'search';
+
+    /**
+     * Whether the search field should be displayed.
+     */
+    protected bool $displaySearch = true;
 }
 ```
+If for some reason, you are not happy with the way our search algorithm works, you should override the `handleSearchQuery` method with your own implementation. It accepts the search value as it's only argument.
+
+```php
+<?php
+
+namespace App\Tables;
+
+class PostsListingTable extends Laratables\BaseTable
+{
+    // ....
+
+    /**
+     * Handle the search query.
+     *
+     * @param  string  $value
+     *
+     * @return void
+     */
+    public function handleSearchQuery($value)
+    {
+        // Use the getQuery() method to access the current build query ...
+
+        $this->getQuery()->where(function ($query) use ($value) {
+            foreach ($this->getSearchColumns() as $index => $column) {
+                if ($index == 0) {
+                    $query = $query->where(htmlspecialchars($column), 'like', '%'.$value.'%');
+                } else {
+                    $query = $query->orWhere(htmlspecialchars($column), 'like', '%'.$value.'%');
+                }
+            }
+        });
+    }
+}
+
 
 ### Setting Data
 

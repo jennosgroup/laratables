@@ -132,6 +132,10 @@ trait Search
      */
     public function handleSearchRequest(): self
     {
+        if (! $this->hasBaseQuery()) {
+            QueryException::baseQueryMissing(get_class($this));
+        }
+
         $this->handleSearchQuery($this->getSearchValue());
 
         return $this;
@@ -146,10 +150,6 @@ trait Search
      */
     public function handleSearchQuery($value)
     {
-        if (! $this->hasBaseQuery()) {
-            return QueryException::baseQueryMissing(get_class($this));
-        }
-
         $this->getQuery()->where(function ($query) use ($value) {
             foreach ($this->getSearchColumns() as $index => $column) {
                 if ($index == 0) {
