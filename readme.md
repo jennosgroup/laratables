@@ -9,15 +9,17 @@
 
 ## About
 
-Laratables is a laravel package that allows you to seemlessly generate tables by using PHP classes, which Laravel developers are more comfortable working with.
+Laratables is a laravel package that allows you to seemlessly generate html tables entirely using PHP classes.
 
 ## Installation
 
-Install through composer command `composer require jennosgroup/laratables`.
+Install with composer `composer require jennosgroup/laratables`.
 
 ## Setup
 
-Publish the package assets with artisan command `php artisan vendor:publish --tag=laratables-assets`. Then include the `laratables.js` script file in your mark `<script src="{{ asset('vendor/laratables/js/laratables.js') }}"></script>`.
+Publish the package assets with artisan command `php artisan vendor:publish --tag=laratables-assets`.
+
+Then include the `laratables.js` script file in your html markup `<script src="{{ asset('vendor/laratables/js/laratables.js') }}"></script>`.
 
 ## Getting Started
 
