@@ -6,6 +6,8 @@
 2. [Installation](#installation)
 3. [Setup](#setup)
 4. [Getting Started](#getting-started)
+5. [Columns](#columns)
+6. [Sortable Columns](#sortable-columns)
 
 ## About
 
@@ -23,7 +25,9 @@ Then include the `laratables.js` script file in your html markup `<script src="{
 
 ## Getting Started
 
-Start by creating a class that extends `Laratables\BaseTable`.
+If you are going to create numerous html tables across your site that will share similar styles and features, it is best to create a basetable class and let all your other tables extend this class.
+
+For example, let's create a class that extends `Laratables\BaseTable`.
 
 ```php
 <?php
@@ -34,10 +38,12 @@ class PostsListingTable extends Laratables\BaseTable
 }
 ```
 
-To start things off, the table needs data to work with. There are a few ways to go about this. If you're using Eloquent or the QueryBuilder, define a protected query method that holds your base query for us to build upon
+To start things off, the table needs data to work with. Define a protected `baseQuery` method that holds your base query for us to build upon.
 
 ```php
 <?php
+
+namespace App\Tables;
 
 class PostsListingTable extends Laratables\BaseTable
 {
@@ -46,7 +52,7 @@ class PostsListingTable extends Laratables\BaseTable
     /**
      * The base query to build upon.
      *
-     * @return Illuminate\Database\Eloquent\QueryBuilder
+     * @return Illuminate\Database\Query\QueryBuilder
      */
     protected function query()
     {
@@ -55,15 +61,24 @@ class PostsListingTable extends Laratables\BaseTable
 }
 ```
 
-### Adding Columns
+## Columns
 
-To add a column, add an associative array to a protected $columns property. The array key is the column id while the array value is the displayable title of the column.
+It's very easy to define the table columns - all we need is an associative array. The array key is the column identifier
+while the array value is the column title.
 
 ```php
+<?php
+
+namespace App\Tables;
 
 class PostsListingTable extends Laratables\BaseTable
 {
-    protected $columns = [
+    // ....
+
+    /**
+     * The table columns.
+     */
+    protected array $columns = [
         'first_name' => 'First Name',
         'last_name' => 'Last Name',
         'date_of_birth' => 'Birth Date',
@@ -71,7 +86,9 @@ class PostsListingTable extends Laratables\BaseTable
 }
 ```
 
-### Making Columns Sortable
+If your column array key matches your data item property, the content of that property will automatically be displayed as the table row content.
+
+## Sortable Columns
 
 To make columns sortable, define a protected $sortColumns property in your class, and add an array containing the column ids of the columns you wish to be sortable.
 
