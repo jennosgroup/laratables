@@ -22,12 +22,12 @@ trait Sections
     /**
      * Indicate whether the active section visual should be an image or an icon.
      */
-    protected string $activeSectionVisualType = 'image';
+    protected string $activeSectionVisualType = 'icon';
 
     /**
      * Indicate whether the trash section visual should be an image or an icon.
      */
-    protected string $trashSectionVisualType = 'image';
+    protected string $trashSectionVisualType = 'icon';
 
     /**
      * The section that is current. 'active' and 'trash' is reserved by us.

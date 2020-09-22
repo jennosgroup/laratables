@@ -84,6 +84,24 @@ abstract class BaseTable
     }
 
     /**
+     * Render the table view.
+     *
+     * @param  array  $options
+     *
+     * @return Illuminate\View\View
+     */
+    public function render(array $options = []): View
+    {
+        $table = $this->viewOptions['table'];
+
+        $options = array_merge($this->viewOptions, $options);
+
+        $options['table'] = $table;
+
+        return view('laratables::table', $options);
+    }
+
+    /**
      * Make the table.
      *
      * @return $this
@@ -102,31 +120,13 @@ abstract class BaseTable
             $table->handleSortRequest();
         }
 
-        if (method_exists($table, 'manipulateQuery')) {
-            $table->{'manipulateQuery'}();
+        if (method_exists($table, $method = 'manipulateQuery')) {
+            $table->$method();
         }
 
         $table->data = $table->generateData($table);
 
         return $table;
-    }
-
-    /**
-     * Render the table view.
-     *
-     * @param  array  $options
-     *
-     * @return Illuminate\View\View
-     */
-    public function render(array $options = []): View
-    {
-        $table = $this->viewOptions['table'];
-
-        $options = array_merge($this->viewOptions, $options);
-
-        $options['table'] = $table;
-
-        return view('laratables::table', $options);
     }
 
     /**

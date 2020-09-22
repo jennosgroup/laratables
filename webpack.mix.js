@@ -11,5 +11,4 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/laratables.js', 'public/js')
-    .sass('resources/scss/laratables.scss', 'public/css');
+mix.js('resources/js/laratables.js', 'public/js');

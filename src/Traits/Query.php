@@ -32,7 +32,7 @@ trait Query
     public function getQuery()
     {
         if (! $this->hasBaseQuery()) {
-            throw QueryException::baseQueryMissing();
+            throw QueryException::baseQueryMissing(get_class($this));
         }
 
         if (is_null($this->query)) {

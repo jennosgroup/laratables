@@ -24,6 +24,11 @@ trait Sort
     protected string $orderKey = 'order';
 
     /**
+     * Whether to allow multiple sorting.
+     */
+    protected bool $allowMultipleSorting = true;
+
+    /**
      * Get the columns that are sortable.
      *
      * @return array
@@ -63,6 +68,16 @@ trait Sort
     public function getOrderKey(): string
     {
         return $this->orderKey;
+    }
+
+    /**
+     * Check if we should allow multiple sorting.
+     *
+     * @return bool
+     */
+    public function allowMultipleSorting(): bool
+    {
+        return $this->allowMultipleSorting;
     }
 
     /**
@@ -121,10 +136,28 @@ trait Sort
         $sorts = $this->getSortValue();
         $orders = $this->getOrderValue();
 
-        $sorts = empty($sorts) ? [] : explode(',', $sorts);
-        $orders = empty($orders) ? [] : explode(',', $orders);
+        if (! $this->allowMultipleSorting()) {
 
-        if (! empty($sorts) && ! in_array($column, $sorts)) {
+            if ($orders == 'asc') {
+                $orders = 'desc';
+            } else {
+                $orders = 'asc';
+            }
+
+            $input = "<input type='hidden' name='".$this->getSortKey()."' value='".$column."'>";
+            $input .= "<input type='hidden' name='".$this->getOrderKey()."' value='".$orders."'>";
+            return $input;
+        }
+
+        if ($this->allowMultipleSorting()) {
+            $sorts = empty($sorts) ? [] : explode(',', $sorts);
+            $orders = empty($orders) ? [] : explode(',', $orders);
+        } else {
+            $sorts = empty($sorts) ? [] : [$sorts];
+            $orders = empty($orders) ? [] : [$orders];
+        }
+
+        if (! in_array($column, $sorts)) {
             $sorts[] = $column;
         }
 

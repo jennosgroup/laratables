@@ -74,7 +74,7 @@ trait Data
     protected function generateData($instance)
     {
         if (! $instance->hasBaseQuery()) {
-            throw QueryException::baseQueryMissing();
+            throw QueryException::baseQueryMissing(get_class($this));
         }
 
         if (! $instance->shouldPaginate()) {

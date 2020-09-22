@@ -12,7 +12,7 @@ trait Actions
     /**
      * The action type.
      *
-     * Accepts 'button' or 'link'
+     * Accepts 'button' or 'link'.
      */
     protected string $actionDisplayType = 'link';
 
@@ -26,7 +26,11 @@ trait Actions
     /**
      * The list of action types that is needed by default.
      */
-    protected array $actions = [];
+    protected array $actions = [
+        // 'view' => ['routeName' => 'users.show', 'method' => 'get'],
+        // 'edit' => ['routeName' => 'users.edit', 'method' => 'get'],
+        // 'delete' => ['routeName' => 'users.destroy', 'method' => 'delete'],
+    ];
 
     /**
      * Check if we should use actions.
@@ -78,26 +82,34 @@ trait Actions
     public function getActionQueryParameters(string $action): array
     {
         $results = [];
+        $allowedList = [];
+        $whitelist = [];
         $blacklist = [];
+        $queryParameters = $this->getQueryParameters();
 
-        $method = 'get'.ucwords($action).'ActionQueryParametersBlacklist';
+        $whitelistMethod = 'get'.ucwords($action).'ActionQueryParametersWhitelist';
+        $blacklistMethod = 'get'.ucwords($action).'ActionQueryParametersBlacklist';
 
-        if (method_exists($this, $method)) {
-            $blacklist = $this->$method();
+        if (method_exists($this, $whitelistMethod)) {
+            $whitelist = $this->$whitelistMethod();
         }
 
-        if ($blacklist == true) {
-            return [];
+        if (method_exists($this, $blacklistMethod)) {
+            $blacklist = $this->$blacklistMethod();
         }
 
         foreach ($this->getQueryParameters() as $key => $value) {
+            if (in_array('*', $whitelist)) {
+                $results[$key] = $value;
+                continue;
+            }
             if (! in_array($key, $blacklist)) {
                 $results[$key] = $value;
             }
         }
 
-        // If user wants the page key and it's not there as a $_GET attribute, add 1 as the default
-        if (! in_array($this->getPageKey(), $blacklist) && ! array_key_exists($this->getPageKey(), $results)) {
+        // If the page key is requested and isn't in the $_GET attributes, add 1 as the default
+        if (in_array($this->getPageKey(), $allowedList) && ! array_key_exists($this->getPageKey(), $results)) {
             $results[$this->getPageKey()] = 1;
         }
 
@@ -150,22 +162,12 @@ trait Actions
     {
         $type = $this->getActionDisplayType();
 
-        if ($type == 'link') {
-            $element = 'actions_link';
-        } elseif ($type == 'button') {
-            $element = 'actions_button';
-        } else {
-            $element = '';
-        }
+        $element = 'actions_'.$type;
 
         $attributes = $this->getElementAttributes($action.'_action_'.$type);
         $attributes = $this->getAndMergeElementAttributes($element, $attributes, ['onclick', 'href', 'type']);
 
-        if (! empty($this->getActionQueryParameters($action)) && $method == 'get') {
-            $attributes['onclick'] = 'event.preventDefault(); this.querySelector("form").submit();';
-        } elseif ($method != 'get') {
-            $attributes['onclick'] = 'event.preventDefault(); this.querySelector("form").submit();';
-        }
+        $attributes['onclick'] = 'event.preventDefault(); this.querySelector("form").submit();';
 
         if ($type == 'button') {
             $attributes['type'] = 'submit';

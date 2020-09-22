@@ -3298,84 +3298,86 @@ var Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/di
      * @param  object  event
      */
 
-    bulkOptionsElement.onchange = function (event) {
-      var element = event.target;
-      var form = element.form;
-      var checkedValues = [];
-      var method = "post"; // A bulk action must be selected
+    if (bulkOptionsElement != null) {
+      bulkOptionsElement.onchange = function (event) {
+        var element = event.target;
+        var form = element.form;
+        var checkedValues = [];
+        var method = "post"; // A bulk action must be selected
 
-      if (element.value == '') {
-        return Swal.fire({
-          title: 'Error',
-          icon: 'error',
-          text: 'Oops, you did not select a bulk action!'
-        });
-      } // Get all the checked items and add them to the form for submitting
-
-
-      wrapperElement.querySelectorAll("input[laratables-id='checkbox-child']").forEach(function (checkbox) {
-        if (checkbox.checked != true) {
-          return;
-        } // Store the checked value
+        if (element.value == '') {
+          return Swal.fire({
+            title: 'Error',
+            icon: 'error',
+            text: 'Oops, you did not select a bulk action!'
+          });
+        } // Get all the checked items and add them to the form for submitting
 
 
-        checkedValues.push(checkbox.value); // Create form input
-
-        var inputElement = document.createElement('input');
-        inputElement.setAttribute('type', 'hidden');
-        inputElement.setAttribute('name', checkboxName + '[]');
-        inputElement.setAttribute('value', checkbox.value); // Add to existing form
-
-        form.appendChild(inputElement);
-      }); // If there are no checked items, we reset the bulk option and also
-      // let the user know that nothing was selected.
-
-      if (checkedValues.length < 1) {
-        element.value = '';
-        return Swal.fire({
-          title: 'Error',
-          icon: 'error',
-          text: 'Oops, there is no checked value to submit!'
-        });
-      } // Get the selected option element
+        wrapperElement.querySelectorAll("input[laratables-id='checkbox-child']").forEach(function (checkbox) {
+          if (checkbox.checked != true) {
+            return;
+          } // Store the checked value
 
 
-      var option = element.options[element.selectedIndex];
-      var requestType = option.getAttribute('request_type').toLowerCase();
-      var route = option.getAttribute('route');
+          checkedValues.push(checkbox.value); // Create form input
 
-      if (requestType == 'get') {
-        method = 'get';
-      } // If request type is not post or patch, we don't need the token field
+          var inputElement = document.createElement('input');
+          inputElement.setAttribute('type', 'hidden');
+          inputElement.setAttribute('name', checkboxName + '[]');
+          inputElement.setAttribute('value', checkbox.value); // Add to existing form
 
+          form.appendChild(inputElement);
+        }); // If there are no checked items, we reset the bulk option and also
+        // let the user know that nothing was selected.
 
-      if (requestType != 'post' && requestType != 'patch') {
-        form.querySelector("input[laratables-id='bulk-options-csrf-token']").removeAttribute('name');
-      } // Add the token if request method is post or patch
-
-
-      if (requestType == 'post' || requestType == 'patch') {
-        form.querySelector("input[laratables-id='bulk-options-csrf-token']").setAttribute('name', '_token');
-      } // If request type is get or post, we don't need the method spoofing
-
-
-      if (requestType == 'get' || requestType == 'post') {
-        form.querySelector("input[laratables-id='bulk-options-method']").removeAttribute('name');
-      } // If request type is not get and post, add method spoofing
+        if (checkedValues.length < 1) {
+          element.value = '';
+          return Swal.fire({
+            title: 'Error',
+            icon: 'error',
+            text: 'Oops, there is no checked value to submit!'
+          });
+        } // Get the selected option element
 
 
-      if (requestType != 'get' && requestType != 'post') {
-        var methodElement = form.querySelector("input[laratables-id='bulk-options-method']");
-        methodElement.setAttribute('name', '_method');
-        methodElement.setAttribute('value', requestType);
-      } // Set the method and action
+        var option = element.options[element.selectedIndex];
+        var requestType = option.getAttribute('request_type').toLowerCase();
+        var route = option.getAttribute('route');
+
+        if (requestType == 'get') {
+          method = 'get';
+        } // If request type is not post or patch, we don't need the token field
 
 
-      form.setAttribute('method', method);
-      form.setAttribute('action', route); // Finally we submit the form
+        if (requestType != 'post' && requestType != 'patch') {
+          form.querySelector("input[laratables-id='bulk-options-csrf-token']").removeAttribute('name');
+        } // Add the token if request method is post or patch
 
-      form.submit();
-    };
+
+        if (requestType == 'post' || requestType == 'patch') {
+          form.querySelector("input[laratables-id='bulk-options-csrf-token']").setAttribute('name', '_token');
+        } // If request type is get or post, we don't need the method spoofing
+
+
+        if (requestType == 'get' || requestType == 'post') {
+          form.querySelector("input[laratables-id='bulk-options-method']").removeAttribute('name');
+        } // If request type is not get and post, add method spoofing
+
+
+        if (requestType != 'get' && requestType != 'post') {
+          var methodElement = form.querySelector("input[laratables-id='bulk-options-method']");
+          methodElement.setAttribute('name', '_method');
+          methodElement.setAttribute('value', requestType);
+        } // Set the method and action
+
+
+        form.setAttribute('method', method);
+        form.setAttribute('action', route); // Finally we submit the form
+
+        form.submit();
+      };
+    }
     /**
      * Submit the per page request.
      *
@@ -3383,19 +3385,21 @@ var Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/di
      */
 
 
-    perPageElement.onchange = function (event) {
-      var element = event.target;
+    if (perPageElement != null) {
+      perPageElement.onchange = function (event) {
+        var element = event.target;
 
-      if (element.value == '') {
-        return Swal.fire({
-          title: 'Error',
-          icon: 'error',
-          text: 'Oops, looks like you did not specify the amount of entries you want to be displayed!'
-        });
-      }
+        if (element.value == '') {
+          return Swal.fire({
+            title: 'Error',
+            icon: 'error',
+            text: 'Oops, looks like you did not specify the amount of entries you want to be displayed!'
+          });
+        }
 
-      element.form.submit();
-    };
+        element.form.submit();
+      };
+    }
     /**
      * Program the head and foot checkbox to automatically select/de-select all body checkboxes.
      */
@@ -3419,45 +3423,35 @@ var Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/di
      * @param  object  event
      */
 
-    searchElement.form.onsubmit = function (event) {
-      var element = event.target.querySelector("input[laratables-id='search-input']");
+    if (searchElement != null) {
+      searchElement.form.onsubmit = function (event) {
+        var element = event.target.querySelector("input[laratables-id='search-input']");
 
-      if (element.value.length > 2) {
-        return;
-      }
+        if (element.value.length > 2) {
+          return;
+        }
 
-      event.preventDefault();
-      return Swal.fire({
-        title: 'Error',
-        icon: 'error',
-        text: 'Oops, your search query must contain more than 2 characters!'
-      });
-    };
+        event.preventDefault();
+        return Swal.fire({
+          title: 'Error',
+          icon: 'error',
+          text: 'Oops, your search query must contain more than 2 characters!'
+        });
+      };
+    }
   });
 })();
 
 /***/ }),
 
-/***/ "./resources/scss/laratables.scss":
-/*!****************************************!*\
-  !*** ./resources/scss/laratables.scss ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ 0:
-/*!***************************************************************************!*\
-  !*** multi ./resources/js/laratables.js ./resources/scss/laratables.scss ***!
-  \***************************************************************************/
+/*!******************************************!*\
+  !*** multi ./resources/js/laratables.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/jenryollivierre/Dropbox/iMac-Code/Packages/laratables/resources/js/laratables.js */"./resources/js/laratables.js");
-module.exports = __webpack_require__(/*! /Users/jenryollivierre/Dropbox/iMac-Code/Packages/laratables/resources/scss/laratables.scss */"./resources/scss/laratables.scss");
+module.exports = __webpack_require__(/*! /Users/jenryollivierre/Dropbox/iMac-Code/Packages/laratables/resources/js/laratables.js */"./resources/js/laratables.js");
 
 
 /***/ })

@@ -15,92 +15,94 @@ const Swal = require('sweetalert2');
          *
          * @param  object  event
          */
-        bulkOptionsElement.onchange = function (event) {
+        if (bulkOptionsElement != null) {
+            bulkOptionsElement.onchange = function (event) {
 
-            var element = event.target;
-            var form = element.form;
-            var checkedValues = [];
-            var method = "post";
+                var element = event.target;
+                var form = element.form;
+                var checkedValues = [];
+                var method = "post";
 
-            // A bulk action must be selected
-            if (element.value == '') {
-                return Swal.fire({
-                    title: 'Error',
-                    icon: 'error',
-                    text: 'Oops, you did not select a bulk action!',
-                });
-            }
-
-            // Get all the checked items and add them to the form for submitting
-            wrapperElement.querySelectorAll("input[laratables-id='checkbox-child']").forEach(function (checkbox) {
-
-                if (checkbox.checked != true) {
-                    return;
+                // A bulk action must be selected
+                if (element.value == '') {
+                    return Swal.fire({
+                        title: 'Error',
+                        icon: 'error',
+                        text: 'Oops, you did not select a bulk action!',
+                    });
                 }
 
-                // Store the checked value
-                checkedValues.push(checkbox.value);
+                // Get all the checked items and add them to the form for submitting
+                wrapperElement.querySelectorAll("input[laratables-id='checkbox-child']").forEach(function (checkbox) {
 
-                // Create form input
-                var inputElement = document.createElement('input');
-                inputElement.setAttribute('type', 'hidden');
-                inputElement.setAttribute('name', checkboxName+'[]');
-                inputElement.setAttribute('value', checkbox.value);
+                    if (checkbox.checked != true) {
+                        return;
+                    }
 
-                // Add to existing form
-                form.appendChild(inputElement);
-            });
+                    // Store the checked value
+                    checkedValues.push(checkbox.value);
 
-            // If there are no checked items, we reset the bulk option and also
-            // let the user know that nothing was selected.
-            if (checkedValues.length < 1) {
+                    // Create form input
+                    var inputElement = document.createElement('input');
+                    inputElement.setAttribute('type', 'hidden');
+                    inputElement.setAttribute('name', checkboxName+'[]');
+                    inputElement.setAttribute('value', checkbox.value);
 
-                element.value = '';
-
-                return Swal.fire({
-                    title: 'Error',
-                    icon: 'error',
-                    text: 'Oops, there is no checked value to submit!',
+                    // Add to existing form
+                    form.appendChild(inputElement);
                 });
+
+                // If there are no checked items, we reset the bulk option and also
+                // let the user know that nothing was selected.
+                if (checkedValues.length < 1) {
+
+                    element.value = '';
+
+                    return Swal.fire({
+                        title: 'Error',
+                        icon: 'error',
+                        text: 'Oops, there is no checked value to submit!',
+                    });
+                }
+
+                // Get the selected option element
+                var option = element.options[element.selectedIndex];
+                var requestType = option.getAttribute('request_type').toLowerCase();
+                var route = option.getAttribute('route');
+
+                if (requestType == 'get') {
+                    method = 'get';
+                }
+
+                // If request type is not post or patch, we don't need the token field
+                if (requestType != 'post' && requestType != 'patch') {
+                    form.querySelector("input[laratables-id='bulk-options-csrf-token']").removeAttribute('name');
+                }
+
+                // Add the token if request method is post or patch
+                if (requestType == 'post' || requestType == 'patch') {
+                    form.querySelector("input[laratables-id='bulk-options-csrf-token']").setAttribute('name', '_token');
+                }
+
+                // If request type is get or post, we don't need the method spoofing
+                if (requestType == 'get' || requestType == 'post') {
+                    form.querySelector("input[laratables-id='bulk-options-method']").removeAttribute('name');
+                }
+
+                // If request type is not get and post, add method spoofing
+                if (requestType != 'get' && requestType != 'post') {
+                    var methodElement = form.querySelector("input[laratables-id='bulk-options-method']");
+                    methodElement.setAttribute('name', '_method');
+                    methodElement.setAttribute('value', requestType);
+                }
+
+                // Set the method and action
+                form.setAttribute('method', method);
+                form.setAttribute('action', route);
+
+                // Finally we submit the form
+                form.submit();
             }
-
-            // Get the selected option element
-            var option = element.options[element.selectedIndex];
-            var requestType = option.getAttribute('request_type').toLowerCase();
-            var route = option.getAttribute('route');
-
-            if (requestType == 'get') {
-                method = 'get';
-            }
-
-            // If request type is not post or patch, we don't need the token field
-            if (requestType != 'post' && requestType != 'patch') {
-                form.querySelector("input[laratables-id='bulk-options-csrf-token']").removeAttribute('name');
-            }
-
-            // Add the token if request method is post or patch
-            if (requestType == 'post' || requestType == 'patch') {
-                form.querySelector("input[laratables-id='bulk-options-csrf-token']").setAttribute('name', '_token');
-            }
-
-            // If request type is get or post, we don't need the method spoofing
-            if (requestType == 'get' || requestType == 'post') {
-                form.querySelector("input[laratables-id='bulk-options-method']").removeAttribute('name');
-            }
-
-            // If request type is not get and post, add method spoofing
-            if (requestType != 'get' && requestType != 'post') {
-                var methodElement = form.querySelector("input[laratables-id='bulk-options-method']");
-                methodElement.setAttribute('name', '_method');
-                methodElement.setAttribute('value', requestType);
-            }
-
-            // Set the method and action
-            form.setAttribute('method', method);
-            form.setAttribute('action', route);
-
-            // Finally we submit the form
-            form.submit();
         }
 
         /**
@@ -108,19 +110,21 @@ const Swal = require('sweetalert2');
          *
          * @param  object  event
          */
-        perPageElement.onchange = function (event) {
+        if (perPageElement != null) {
+            perPageElement.onchange = function (event) {
 
-            var element = event.target;
+                var element = event.target;
 
-            if (element.value == '') {
-                return Swal.fire({
-                    title: 'Error',
-                    icon: 'error',
-                    text: 'Oops, looks like you did not specify the amount of entries you want to be displayed!',
-                });
+                if (element.value == '') {
+                    return Swal.fire({
+                        title: 'Error',
+                        icon: 'error',
+                        text: 'Oops, looks like you did not specify the amount of entries you want to be displayed!',
+                    });
+                }
+
+                element.form.submit();
             }
-
-            element.form.submit();
         }
 
         /**
@@ -146,21 +150,23 @@ const Swal = require('sweetalert2');
          *
          * @param  object  event
          */
-        searchElement.form.onsubmit = function (event) {
+        if (searchElement != null) {
+            searchElement.form.onsubmit = function (event) {
 
-            var element = event.target.querySelector("input[laratables-id='search-input']");
+                var element = event.target.querySelector("input[laratables-id='search-input']");
 
-            if (element.value.length > 2) {
-                return;
+                if (element.value.length > 2) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                return Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: 'Oops, your search query must contain more than 2 characters!',
+                });
             }
-
-            event.preventDefault();
-
-            return Swal.fire({
-                title: 'Error',
-                icon: 'error',
-                text: 'Oops, your search query must contain more than 2 characters!',
-            });
         }
     });
 })();

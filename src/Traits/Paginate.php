@@ -143,7 +143,7 @@ trait Paginate
     public function displayPagination(): string
     {
         if (! $this->hasBaseQuery()) {
-            throw QueryException::baseQueryMissing();
+            throw QueryException::baseQueryMissing(get_class($this));
         }
 
         return $this->getData()
