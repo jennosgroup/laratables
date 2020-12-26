@@ -230,6 +230,10 @@ trait Sort
             $orders[trim($column)] = $orderables[$index] ?? $defaultSort;
         }
 
+        if (! $this->hasBaseQuery()) {
+            QueryException::baseQueryMissing(get_class($this));
+        }
+
         if (! empty($orders)) {
             $this->handleSortQuery($orders);
         }
@@ -246,10 +250,6 @@ trait Sort
      */
     public function handleSortQuery(array $columns)
     {
-        if (! $this->hasBaseQuery()) {
-            return QueryException::baseQueryMissing(get_class($this));
-        }
-
         foreach ($columns as $column => $order) {
             $this->getQuery()->orderBy(htmlspecialchars($column), $order);
         }

@@ -65,9 +65,11 @@ trait Actions
     /**
      * Get the actions.
      *
+     * @param  mixed  $item
+     *
      * @return array
      */
-    public function getActions(): array
+    public function getActions($item): array
     {
         return $this->actions;
     }
@@ -99,8 +101,11 @@ trait Actions
         }
 
         foreach ($this->getQueryParameters() as $key => $value) {
-            if (in_array('*', $whitelist)) {
+            if (in_array('*', $whitelist) || in_array($key, $whitelist)) {
                 $results[$key] = $value;
+                continue;
+            }
+            if (in_array('*', $blacklist)) {
                 continue;
             }
             if (! in_array($key, $blacklist)) {
@@ -133,7 +138,7 @@ trait Actions
 
         $content = "<div ".$this->getElementAttributesString('actions').">";
 
-        foreach ($this->getActions() as $action => $data) {
+        foreach ($this->getActions($item) as $action => $data) {
             $options = [
                 'route' => route($data['routeName'], $item),
                 'method' => strtolower($data['method']),
