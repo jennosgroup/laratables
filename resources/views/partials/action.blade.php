@@ -1,7 +1,7 @@
 <{{ ($table->getActionDisplayType() == 'button') ? 'button' : 'a' }} {!! $table->elementHtml('actions_'.$table->getActionDisplayType())
     ->mergeElement($action.'_action_'.$table->getActionDisplayType())
     ->override([
-        'onclick' => ($table->getActionDisplayType() == 'button') ? 'event.preventDefault(); this.querySelector("form").submit();' : null,
+        'onclick' => ($method != 'get') ? 'event.preventDefault(); this.querySelector("form").submit();' : null,
         ($table->getActionDisplayType() == 'button') ? 'type' : 'href' => ($table->getActionDisplayType() == 'button') ? 'submit' : $route,
     ])
 !!}>
@@ -13,7 +13,7 @@
     @endif
 
     {{-- Add the form so we can submit values with the request --}}
-    @if ($queryParameters = $table->getActionQueryParameters($action))
+    @if ($table->hasQueryParameters() || $method != 'get')
         <form style="display: none;" method="{{ ($method == 'get') ? 'get' : 'post' }}" action="{{ $route }}">
 
             {{-- CSRF Token --}}
@@ -27,7 +27,7 @@
             @endif
 
             {{-- Add query args that the user requested --}}
-            @foreach ($queryParameters as $key => $value)
+            @foreach ($table->getActionQueryParameters($action) as $key => $value)
                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
             @endforeach
         </form>
