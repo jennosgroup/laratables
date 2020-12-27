@@ -1,6 +1,6 @@
 {
     "name": "jennosgroup/laratables",
-    "description": "Generate tables for your laravel application through classes",
+    "description": "A laravel package that allows you to seemlessly generate html tables entirely using PHP classes.",
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^7.2"
+        "php": "^7.4"
     },
     "autoload": {
         "psr-4": {
