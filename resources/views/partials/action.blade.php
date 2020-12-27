@@ -1,9 +1,8 @@
 <{{ ($table->getActionDisplayType() == 'button') ? 'button' : 'a' }} {!! $table->elementHtml('actions_'.$table->getActionDisplayType())
     ->mergeElement($action.'_action_'.$table->getActionDisplayType())
     ->override([
-        'onclick' => 'event.preventDefault(); this.querySelector("form").submit();',
-        'type' => 'submit',
-        'href' => $route,
+        'onclick' => ($table->getActionDisplayType() == 'button') ? 'event.preventDefault(); this.querySelector("form").submit();' : null,
+        ($table->getActionDisplayType() == 'button') ? 'type' : 'href' => ($table->getActionDisplayType() == 'button') ? 'submit' : $route,
     ])
 !!}>
 
