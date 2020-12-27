@@ -2,37 +2,37 @@
 
 namespace Laratables\Traits;
 
-trait WrapperContent
+trait Wrapper
 {
     /**
      * Indicate whether we should display the top wrapper top content view.
      */
-    protected bool $shouldDisplayTopWrapperTopContentView = true;
+    protected bool $displayTopWrapperTopContentView = true;
 
     /**
      * Indicate whether we should display the top wrapper middle content view.
      */
-    protected bool $shouldDisplayTopWrapperMiddleContentView = true;
+    protected bool $displayTopWrapperMiddleContentView = true;
 
     /**
      * Indicate whether we should display the top wrapper bottom content view.
      */
-    protected bool $shouldDisplayTopWrapperBottomContentView = true;
+    protected bool $displayTopWrapperBottomContentView = true;
 
     /**
      * Indicate whether we should display the bottom wrapper top content view.
      */
-    protected bool $shouldDisplayBottomWrapperTopContentView = true;
+    protected bool $displayBottomWrapperTopContentView = true;
 
     /**
      * Indicate whether we should display the bottom wrapper middle content view.
      */
-    protected bool $shouldDisplayBottomWrapperMiddleContentView = true;
+    protected bool $displayBottomWrapperMiddleContentView = true;
 
     /**
      * Indicate whether we should display the bottom wrapper bottom content view.
      */
-    protected bool $shouldDisplayBottomWrapperBottomContentView = true;
+    protected bool $displayBottomWrapperBottomContentView = true;
 
     /**
      * Indicate whether we should display the top wrapper top content view.
@@ -41,7 +41,7 @@ trait WrapperContent
      */
     public function shouldDisplayTopWrapperTopContentView(): bool
     {
-        return $this->shouldDisplayTopWrapperTopContentView;
+        return $this->displayTopWrapperTopContentView;
     }
 
     /**
@@ -51,7 +51,7 @@ trait WrapperContent
      */
     public function shouldDisplayTopWrapperMiddleContentView(): bool
     {
-        return $this->shouldDisplayTopWrapperMiddleContentView;
+        return $this->displayTopWrapperMiddleContentView;
     }
 
     /**
@@ -61,7 +61,7 @@ trait WrapperContent
      */
     public function shouldDisplayTopWrapperBottomContentView(): bool
     {
-        return $this->shouldDisplayTopWrapperBottomContentView;
+        return $this->displayTopWrapperBottomContentView;
     }
 
     /**
@@ -71,7 +71,7 @@ trait WrapperContent
      */
     public function shouldDisplayBottomWrapperTopContentView(): bool
     {
-        return $this->shouldDisplayBottomWrapperTopContentView;
+        return $this->displayBottomWrapperTopContentView;
     }
 
     /**
@@ -81,7 +81,7 @@ trait WrapperContent
      */
     public function shouldDisplayBottomWrapperMiddleContentView(): bool
     {
-        return $this->shouldDisplayBottomWrapperMiddleContentView;
+        return $this->displayBottomWrapperMiddleContentView;
     }
 
     /**
@@ -91,7 +91,7 @@ trait WrapperContent
      */
     public function shouldDisplayBottomWrapperBottomContentView(): bool
     {
-        return $this->shouldDisplayBottomWrapperBottomContentView;
+        return $this->displayBottomWrapperBottomContentView;
     }
 
     /**
@@ -159,7 +159,7 @@ trait WrapperContent
      *
      * @return string
      */
-    public function getTopWrapperMiddleContentView()
+    public function getTopWrapperMiddleContentView(): string
     {
         return 'laratables::templates.top-wrapper-middle-content';
     }
@@ -169,7 +169,7 @@ trait WrapperContent
      *
      * @return string
      */
-    public function getBottomWrapperMiddleContentView()
+    public function getBottomWrapperMiddleContentView(): string
     {
         return 'laratables::templates.bottom-wrapper-middle-content';
     }

@@ -11,9 +11,7 @@ trait UrlQuery
      */
     public function hasQueryParameters(): bool
     {
-        $parts = $this->getUrlParts();
-        $queryString = $parts[5] ?? null;
-        return ! empty($queryString);
+        return ! empty($this->getQueryString());
     }
 
     /**
@@ -73,10 +71,10 @@ trait UrlQuery
      *
      * @return string|null
      */
-    public function getQueryString(): string
+    public function getQueryString(): ?string
     {
         $parts = $this->getUrlParts();
-        return $parts[5];
+        return $parts[5] ?? null;
     }
 
     /**

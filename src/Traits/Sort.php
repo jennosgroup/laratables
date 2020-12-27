@@ -125,61 +125,6 @@ trait Sort
     }
 
     /**
-     * Build the form column sort and order input fields.
-     *
-     * @param  string  $column
-     *
-     * @return string
-     */
-    public function generateColumnSortAndOrderInput($column)
-    {
-        $sorts = $this->getSortValue();
-        $orders = $this->getOrderValue();
-
-        if (! $this->allowMultipleSorting()) {
-
-            if ($orders == 'asc') {
-                $orders = 'desc';
-            } else {
-                $orders = 'asc';
-            }
-
-            $input = "<input type='hidden' name='".$this->getSortKey()."' value='".$column."'>";
-            $input .= "<input type='hidden' name='".$this->getOrderKey()."' value='".$orders."'>";
-            return $input;
-        }
-
-        if ($this->allowMultipleSorting()) {
-            $sorts = empty($sorts) ? [] : explode(',', $sorts);
-            $orders = empty($orders) ? [] : explode(',', $orders);
-        } else {
-            $sorts = empty($sorts) ? [] : [$sorts];
-            $orders = empty($orders) ? [] : [$orders];
-        }
-
-        if (! in_array($column, $sorts)) {
-            $sorts[] = $column;
-        }
-
-        if (empty($sorts)) {
-            $sorts[] = $column;
-        }
-
-        $columnPosition = array_search($column, $sorts);
-
-        if (isset($orders[$columnPosition])) {
-            $orders[$columnPosition] = ($orders[$columnPosition] == 'asc') ? 'desc' : 'asc';
-        } else {
-            $orders[] = 'asc';
-        }
-
-        $input = "<input type='hidden' name='".$this->getSortKey()."' value='".implode(',', $sorts)."'>";
-        $input .= "<input type='hidden' name='".$this->getOrderKey()."' value='".implode(',', $orders)."'>";
-
-        return $input;
-    }
-
-    /**
      * Get the asc sort icon markup.
      *
      * @return string
@@ -200,11 +145,81 @@ trait Sort
     }
 
     /**
+     * Build the form column sort and order input fields.
+     *
+     * @param  string  $column
+     *
+     * @return string
+     */
+    public function generateColumnSortAndOrderInput($column): string
+    {
+        if ($this->allowMultipleSorting()) {
+            return $this->generateColumnSortAndOrderInputForMultipleSorting($column);
+        }
+
+        return $this->generateColumnSortAndOrderInputForSingularSorting($column);
+    }
+
+    /**
+     * Build the form column sort and order input fields for single sorting.
+     *
+     * @param  string  $column
+     *
+     * @return string
+     */
+    protected function generateColumnSortAndOrderInputForSingularSorting(string $column)
+    {
+        $sorts = $this->getSortValue();
+        $orders = $this->getOrderValue();
+
+        if ($sorts == $column && $orders == 'asc') {
+            $orders = 'desc';
+        } else {
+            $orders = 'asc';
+        }
+
+        $input = "<input type='hidden' name='".$this->getSortKey()."' value='".$column."'>";
+        $input .= "<input type='hidden' name='".$this->getOrderKey()."' value='".$orders."'>";
+
+        return $input;
+    }
+
+    /**
+     * Build the form column sort and order input fields for multiple sorting.
+     *
+     * @param  string  $column
+     *
+     * @return string
+     */
+    protected function generateColumnSortAndOrderInputForMultipleSorting(string $column)
+    {
+        $sorts = empty($sorts) ? [] : explode(',', $sorts);
+        $orders = empty($orders) ? [] : explode(',', $orders);
+
+        if (! in_array($column, $sorts)) {
+            $sorts[] = $column;
+        }
+
+        $columnPosition = array_search($column, $sorts);
+
+        if (isset($orders[$columnPosition])) {
+            $orders[$columnPosition] = ($orders[$columnPosition] == 'asc') ? 'desc' : 'asc';
+        } else {
+            $orders[] = 'asc';
+        }
+
+        $input = "<input type='hidden' name='".$this->getSortKey()."' value='".implode(',', $sorts)."'>";
+        $input .= "<input type='hidden' name='".$this->getOrderKey()."' value='".implode(',', $orders)."'>";
+
+        return $input;
+    }
+
+    /**
      * Check if we have a sort request.
      *
      * @return bool
      */
-    public function hasSortRequest(): bool
+    protected function hasSortRequest(): bool
     {
         return isset($_GET[$this->getSortKey()]);
     }
@@ -214,28 +229,28 @@ trait Sort
      *
      * @return $this
      */
-    public function handleSortRequest(): self
+    protected function handleSortRequest(): self
     {
-        $orders = [];
-        $defaultSort = 'asc';
-
-        $sortables = explode(',', $this->getSortValue());
-        $orderables = explode(',', $this->getOrderValue());
-
-        if (empty($sortables)) {
+        if (! $this->hasBaseQuery()) {
             return $this;
         }
 
-        foreach ($sortables as $index => $column) {
-            $orders[trim($column)] = $orderables[$index] ?? $defaultSort;
+        $results = [];
+        $defaultOrder = 'asc';
+
+        $columns = explode(',', $this->getSortValue());
+        $orders = explode(',', $this->getOrderValue());
+
+        if (empty($columns)) {
+            return $this;
         }
 
-        if (! $this->hasBaseQuery()) {
-            QueryException::baseQueryMissing(get_class($this));
+        foreach ($columns as $index => $column) {
+            $results[trim($column)] = $orders[$index] ?? $defaultOrder;
         }
 
-        if (! empty($orders)) {
-            $this->handleSortQuery($orders);
+        if (! empty($results)) {
+            $this->handleSortQuery($results);
         }
 
         return $this;
@@ -248,7 +263,7 @@ trait Sort
      *
      * @return void
      */
-    public function handleSortQuery(array $columns)
+    protected function handleSortQuery(array $columns)
     {
         foreach ($columns as $column => $order) {
             $this->getQuery()->orderBy(htmlspecialchars($column), $order);

@@ -1,4 +1,4 @@
-<form method="get" {!! $table->getElementAttributesString('search', [], ['method']) !!}>
+<form method="get" {!! $table->elementHtml('search')->except(['method']) !!}>
     {{-- Add get parameters except page & search --}}
     @if ($table->hasQueryParameters())
         @foreach ($table->getQueryParameters($table->getPageKey(), $table->getSearchKey()) as $key => $value)
@@ -6,9 +6,11 @@
         @endforeach
     @endif
 
-    <input {!! $table->getSearchInputAttributesString() !!}>
+    {{-- Search Input Field --}}
+    <input {!! $table->elementHtml('search_input')->override(['laratables-id' => 'search-input', 'type' => 'search', 'name' => $table->getSearchKey(), 'value' => $table->getSearchValue()]) !!}>
 
-    <button {!! $table->getSearchButtonAttributesString() !!}>
+    {{-- Search Button --}}
+    <button {!! $table->elementHtml('search_submit')->override(['laratables-id' => 'search-submit', 'type' => 'submit']) !!}>
         {!! $table->getSearchIconMarkup() !!}
     </button>
 </form>

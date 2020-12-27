@@ -2,7 +2,6 @@
 
 namespace Laratables;
 
-use Illuminate\View\View;
 use Illuminate\Support\Str;
 use Illuminate\Cache\ArrayStore;
 
@@ -10,19 +9,19 @@ abstract class BaseTable
 {
     use Traits\Data,
     Traits\Sort,
+    Traits\Table,
     Traits\Query,
     Traits\Search,
+    Traits\Wrapper,
     Traits\Columns,
     Traits\Actions,
     Traits\Checkbox,
     Traits\Paginate,
     Traits\UrlQuery,
     Traits\Sections,
+    Traits\Sanitize,
     Traits\Attributes,
-    Traits\BulkOptions,
-    Traits\WrapperContent,
-    Traits\AttributesString,
-    Traits\TableContentOutput;
+    Traits\BulkOptions;
 
     /**
      * The cache store.
@@ -30,29 +29,9 @@ abstract class BaseTable
     protected ArrayStore $cache;
 
     /**
-     * The view options.
-     */
-    protected array $viewOptions = [];
-
-    /**
      * The unique id for the table.
      */
     protected string $id;
-
-    /**
-     * The id field for the items being iterated over.
-     */
-    protected string $idField = 'id';
-
-    /**
-     * Indicate whether the table footer should be displayed.
-     */
-    protected bool $displayFooter = true;
-
-    /**
-     * The no items message.
-     */
-    protected string $noItemsMessage = 'There is nothing to display.';
 
     /**
      * Create an instance of the class.
@@ -65,44 +44,7 @@ abstract class BaseTable
     }
 
     /**
-     * Return the view.
-     *
-     * @param  string  $path
-     * @param  array  $options
-     *
-     * @return Illuminate\View\View
-     */
-    public static function view(string $path, array $options = []): View
-    {
-        $table = static::make();
-
-        $options['table'] = $table;
-
-        $table->viewOptions = $options;
-
-        return view($path, $options);
-    }
-
-    /**
-     * Render the table view.
-     *
-     * @param  array  $options
-     *
-     * @return Illuminate\View\View
-     */
-    public function render(array $options = []): View
-    {
-        $table = $this->viewOptions['table'];
-
-        $options = array_merge($this->viewOptions, $options);
-
-        $options['table'] = $table;
-
-        return view('laratables::table', $options);
-    }
-
-    /**
-     * Make the table.
+     * Make an instance of the table.
      *
      * @return $this
      */
@@ -110,20 +52,25 @@ abstract class BaseTable
     {
         $table = new static;
 
+        // Assign a unique id to the table
         $table->id = $table->makeUniqueId();
 
+        // Perform search queries
         if ($table->hasSearchRequest()) {
             $table->handleSearchRequest();
         }
 
+        // Perform sort queries
         if ($table->hasSortRequest()) {
             $table->handleSortRequest();
         }
 
+        // Allows us to further manipulate the query and searching and sorting is done
         if (method_exists($table, $method = 'manipulateQuery')) {
             $table->$method();
         }
 
+        // We set the generated data so it can be retrieved later on in it's final stages
         $table->data = $table->generateData($table);
 
         return $table;
@@ -140,36 +87,6 @@ abstract class BaseTable
     }
 
     /**
-     * Get the items id field.
-     *
-     * @return string
-     */
-    public function getIdField(): string
-    {
-        return $this->idField;
-    }
-
-    /**
-     * Get the indicator if we should display the table footer.
-     *
-     * @return bool
-     */
-    public function shouldDisplayFooter(): bool
-    {
-        return $this->displayFooter;
-    }
-
-    /**
-     * Get the no items message.
-     *
-     * @return string
-     */
-    public function getNoItemsMessage(): string
-    {
-        return $this->noItemsMessage;
-    }
-
-    /**
      * Generate a unique id.
      *
      * @return string
@@ -177,29 +94,5 @@ abstract class BaseTable
     protected function makeUniqueId(): string
     {
         return Str::random(20);
-    }
-
-    /**
-     * The standard default output of blade.
-     *
-     * @param  mixed  $value
-     *
-     * @return mixed
-     */
-    protected function output($value)
-    {
-        return e($value);
-    }
-
-    /**
-     * The standard escape output of blade.
-     *
-     * @param  mixed  $value
-     *
-     * @return mixed
-     */
-    protected function escape($value)
-    {
-        return e($value);
     }
 }

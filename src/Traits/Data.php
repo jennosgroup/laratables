@@ -3,20 +3,14 @@
 namespace Laratables\Traits;
 
 use Illuminate\Support\Collection;
-use Laratables\Exceptions\DataException;
-use Laratables\Exceptions\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Data
 {
     /**
      * The data to work with.
-     *
-     * This must be something that can be iterated over.
-     *
-     * @var mixed
      */
-    protected $data = [];
+    protected iterable $data = [];
 
     /**
      * Get the data to work with.
@@ -28,13 +22,10 @@ trait Data
      *
      * This must return data that can be iterated over.
      *
-     * @return mixed
+     * @return iterable
      */
-    public function getData()
+    public function getData(): iterable
     {
-        if (! $this->dataIsIterable()) {
-            return DataException::notIterable();
-        }
         return $this->data;
     }
 
@@ -62,30 +53,27 @@ trait Data
      * Generate the data to work with.
      *
      * By default, this relies on there being a base query to work with. By
-     * base query, we mean an instance of the laravel query builder (Eloquent or DB).
+     * base query, we mean an instance of the Illuminate\Database\Query\Builder.
      *
      * If you wish for your data to be generated without the query builder, this is
      * the method to override.
      *
      * @param  Laratables\BaseTable  $instance
      *
-     * @return mixed  Must be data that can be iterable over
+     * @return iterable
      */
-    protected function generateData($instance)
+    protected function generateData($instance): iterable
     {
         if (! $instance->hasBaseQuery()) {
-            throw QueryException::baseQueryMissing(get_class($this));
+            return [];
         }
 
         if (! $instance->shouldPaginate()) {
             return $instance->getQuery()->get();
         }
 
-        if ($instance->hasPerPageTotal()) {
-            return $instance->getQuery()->paginate($instance->getPerPageTotal());
-        }
-
-        return $instance->getQuery()->paginate();
+        return $instance->getQuery()
+            ->paginate($instance->getPerPageTotal(), ['*'], $this->getPageKey());
     }
 
     /**

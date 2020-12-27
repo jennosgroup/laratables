@@ -10,7 +10,7 @@ trait Query
     /**
      * The current query.
      *
-     * @return Illuminate\Database\Eloquent\Builder
+     * @var Illuminate\Database\Query\Builder
      */
     protected $query;
 
@@ -19,7 +19,7 @@ trait Query
      *
      * @return bool
      */
-    public function hasBaseQuery(): bool
+    protected function hasBaseQuery(): bool
     {
         return method_exists($this, 'baseQuery');
     }
@@ -27,14 +27,10 @@ trait Query
     /**
      * Get the current query to continue to build upon.
      *
-     * @return Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Query\Builder
      */
-    public function getQuery()
+    protected function getQuery()
     {
-        if (! $this->hasBaseQuery()) {
-            throw QueryException::baseQueryMissing(get_class($this));
-        }
-
         if (is_null($this->query)) {
             $this->query = $this->getFreshQuery();
         }
@@ -43,23 +39,29 @@ trait Query
     }
 
     /**
+     * Get a fresh instance of the base query.
+     *
+     * @return Illuminate\Database\Query\Builder
+     *
+     * @throws Laratables\Exceptions\QueryException
+     */
+    protected function getFreshQuery()
+    {
+        if (! $this->hasBaseQuery()) {
+            throw QueryException::baseQueryMissing(get_class($this));
+        }
+
+        return $this->baseQuery();
+    }
+
+    /**
      * Refresh the query.
      *
      * @return $this
      */
-    public function refreshQuery(): self
+    protected function refreshQuery(): self
     {
         $this->query = $this->getFreshQuery();
         return $this;
-    }
-
-    /**
-     * Get a fresh instance of the base query.
-     *
-     * @return Illuminate\Database\Eloquent\Builder
-     */
-    public function getFreshQuery()
-    {
-        return $this->baseQuery();
     }
 }

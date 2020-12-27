@@ -3,6 +3,7 @@
 namespace Laratables\Traits;
 
 use Laratables\Exceptions\QueryException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Paginate
 {
@@ -24,17 +25,37 @@ trait Paginate
     /**
      * Indicate whether we should paginate the query.
      */
-    protected bool $shouldPaginate = true;
+    protected bool $paginate = true;
 
     /**
      * Indicate whether we should display the pagination links.
      */
-    protected bool $shouldDisplayPagination = true;
+    protected bool $displayPagination = true;
 
     /**
      * Whether we should display the per page options.
      */
-    protected bool $shouldDisplayPerPageOptions = false;
+    protected bool $displayPerPageOptions = false;
+
+    /**
+     * Get the page key.
+     *
+     * @return string
+     */
+    public function getPageKey(): string
+    {
+        return $this->pageKey;
+    }
+
+    /**
+     * Get the pagination total key.
+     *
+     * @return string
+     */
+    public function getPerPageKey(): string
+    {
+        return $this->perPageKey;
+    }
 
     /**
      * Get the per page total.
@@ -66,7 +87,7 @@ trait Paginate
      */
     public function getRequestedPerPageTotal(): int
     {
-        return $_GET[$this->getPerPageKey()];
+        return $_GET[$this->getPerPageKey()] ?? 0;
     }
 
     /**
@@ -77,26 +98,6 @@ trait Paginate
     public function hasPerPageTotal(): bool
     {
         return ! empty($this->getPerPageTotal());
-    }
-
-    /**
-     * Get the pagination total key.
-     *
-     * @return string
-     */
-    public function getPerPageKey(): string
-    {
-        return $this->perPageKey;
-    }
-
-    /**
-     * Get the page key.
-     *
-     * @return string
-     */
-    public function getPageKey(): string
-    {
-        return $this->pageKey;
     }
 
     /**
@@ -122,7 +123,7 @@ trait Paginate
      */
     public function shouldPaginate(): bool
     {
-        return $this->shouldPaginate;
+        return $this->paginate;
     }
 
     /**
@@ -132,24 +133,27 @@ trait Paginate
      */
     public function shouldDisplayPagination(): bool
     {
-        return $this->shouldPaginate() && $this->shouldDisplayPagination;
+        return $this->shouldPaginate() && $this->displayPagination;
     }
 
     /**
      * Display the pagination links.
      *
-     * @return string
+     * @return string|null
      */
-    public function displayPagination(): string
+    public function displayPagination(): ?string
     {
         if (! $this->hasBaseQuery()) {
-            throw QueryException::baseQueryMissing(get_class($this));
+            return null;
         }
 
-        return $this->getData()
-            ->withQueryString()
-            ->setPageName($this->getPageKey())
-            ->links();
+        $data = $this->getData();
+
+        if (! $data instanceof LengthAwarePaginator) {
+            return null;
+        }
+
+        return $data->withQueryString()->links();
     }
 
     /**
@@ -159,7 +163,7 @@ trait Paginate
      */
     public function shouldDisplayPerPageOptions(): bool
     {
-        return $this->shouldDisplayPerPageOptions;
+        return $this->displayPerPageOptions;
     }
 
     /**
@@ -187,7 +191,7 @@ trait Paginate
     public function getPerPageSelectAttributesString(): string
     {
         $attributes = $this->getElementAttributes('per_page_select');
-        $attributes = $this->getAndMergeElementAttributes('bulk_per_page_select', $attributes);
+        $attributes = $this->getAndMergeElementAttributes('wrapper_selects', $attributes);
         $attributes['name'] = $this->getPerPageKey();
         $attributes['laratables-id'] = 'per-page-select';
 

@@ -10,6 +10,11 @@ trait Actions
     protected bool $hasActions = false;
 
     /**
+     * The title for the action column.
+     */
+    protected string $actionColumnTitle = 'Actions';
+
+    /**
      * The action type.
      *
      * Accepts 'button' or 'link'.
@@ -25,12 +30,13 @@ trait Actions
 
     /**
      * The list of action types that is needed by default.
+     *
+     * Example:
+     * 'view' => ['routeName' => 'users.show', 'method' => 'get'],
+     * 'edit' => ['routeName' => 'users.edit', 'method' => 'get'],
+     * 'delete' => ['routeName' => 'users.destroy', 'method' => 'delete'],
      */
-    protected array $actions = [
-        // 'view' => ['routeName' => 'users.show', 'method' => 'get'],
-        // 'edit' => ['routeName' => 'users.edit', 'method' => 'get'],
-        // 'delete' => ['routeName' => 'users.destroy', 'method' => 'delete'],
-    ];
+    protected array $actions = [];
 
     /**
      * Check if we should use actions.
@@ -40,6 +46,21 @@ trait Actions
     public function hasActions(): bool
     {
         return $this->hasActions;
+    }
+
+    /**
+     * Get the action column title.
+     *
+     * NOTE:: As part of the standard functionality of this package, before
+     * a column title is rendered, a check is made to see if there is a method
+     * provided to over ride the default title. All we are doing here is taking
+     * advantage of that functionality.
+     *
+     * @return string
+     */
+    public function getActionColumnTitle(): string
+    {
+        return $this->actionColumnTitle;
     }
 
     /**
@@ -65,13 +86,23 @@ trait Actions
     /**
      * Get the actions.
      *
+     * @return array
+     */
+    public function getActions(): array
+    {
+        return $this->actions;
+    }
+
+    /**
+     * Get the action for an individual item.
+     *
      * @param  mixed  $item
      *
      * @return array
      */
-    public function getActions($item): array
+    public function getItemActions($item): array
     {
-        return $this->actions;
+        return $this->getActions();
     }
 
     /**
@@ -84,20 +115,28 @@ trait Actions
     public function getActionQueryParameters(string $action): array
     {
         $results = [];
-        $allowedList = [];
         $whitelist = [];
         $blacklist = [];
-        $queryParameters = $this->getQueryParameters();
 
+        $globalWhitelistMethod = 'getActionQueryParametersWhitelist';
+        $globalBlacklistMethod = 'getActionQueryParametersBlacklist';
         $whitelistMethod = 'get'.ucwords($action).'ActionQueryParametersWhitelist';
         $blacklistMethod = 'get'.ucwords($action).'ActionQueryParametersBlacklist';
 
+        if (method_exists($this, $globalWhitelistMethod)) {
+            $whitelist = $this->$globalWhitelistMethod($action);
+        }
+
         if (method_exists($this, $whitelistMethod)) {
-            $whitelist = $this->$whitelistMethod();
+            $whitelist = array_merge($whitelist, $this->$whitelistMethod());
+        }
+
+        if (method_exists($this, $globalBlacklistMethod)) {
+            $blacklist = $this->$globalBlacklistMethod($action);
         }
 
         if (method_exists($this, $blacklistMethod)) {
-            $blacklist = $this->$blacklistMethod();
+            $blacklist = array_merge($blacklist, $this->$blacklistMethod());
         }
 
         foreach ($this->getQueryParameters() as $key => $value) {
@@ -114,7 +153,7 @@ trait Actions
         }
 
         // If the page key is requested and isn't in the $_GET attributes, add 1 as the default
-        if (in_array($this->getPageKey(), $allowedList) && ! array_key_exists($this->getPageKey(), $results)) {
+        if (in_array($this->getPageKey(), $whitelist) && ! array_key_exists($this->getPageKey(), $results)) {
             $results[$this->getPageKey()] = 1;
         }
 
@@ -124,21 +163,20 @@ trait Actions
     /**
      * Get the actions column content.
      *
+     * NOTE:: As part of the standard functionality of this package, before
+     * a column content is rendered, a check is made to see if there is a method
+     * provided to over ride the default content. All we are doing here is taking
+     * advantage of that functionality.
+     *
      * @param  iterable  $item
      *
      * @return string
      */
     public function getActionsColumnContent($item)
     {
-        if (! $this->hasActions()) {
-            return $item->actions
-                ? $this->output($item->actions)
-                : (isset($item['actions']) ? $this->output($item['actions']) : null);
-        }
+        $content = "<div ".$this->elementHtml('actions').">";
 
-        $content = "<div ".$this->getElementAttributesString('actions').">";
-
-        foreach ($this->getActions($item) as $action => $data) {
+        foreach ($this->getItemActions($item) as $action => $data) {
             $options = [
                 'route' => route($data['routeName'], $item),
                 'method' => strtolower($data['method']),
@@ -155,36 +193,9 @@ trait Actions
     }
 
     /**
-     * Get the action element attributes string.
+     * Get the action icon markup.
      *
      * @param  string  $action
-     * @param  string  $route
-     * @param  string  $method
-     *
-     * @return string|null
-     */
-    public function getActionElementAttributesString(string $action, string $route, string $method): ?string
-    {
-        $type = $this->getActionDisplayType();
-
-        $element = 'actions_'.$type;
-
-        $attributes = $this->getElementAttributes($action.'_action_'.$type);
-        $attributes = $this->getAndMergeElementAttributes($element, $attributes, ['onclick', 'href', 'type']);
-
-        $attributes['onclick'] = 'event.preventDefault(); this.querySelector("form").submit();';
-
-        if ($type == 'button') {
-            $attributes['type'] = 'submit';
-        } elseif ($type == 'link') {
-            $attributes['href'] = $route;
-        }
-
-        return $this->parseAttributesForOutput($attributes);
-    }
-
-    /**
-     * Get the action icon markup.
      *
      * @return string|null
      */
@@ -201,6 +212,8 @@ trait Actions
 
     /**
      * Get the action text.
+     *
+     * @param  string  $action
      *
      * @return string|null
      */

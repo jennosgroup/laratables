@@ -86,36 +86,6 @@ trait Search
     }
 
     /**
-     * Get the search input attributes string.
-     *
-     * @return string
-     */
-    public function getSearchInputAttributesString(): string
-    {
-        $attributes = $this->getElementAttributes('search_input');
-        $attributes['laratables-id'] = 'search-input';
-        $attributes['type'] = 'search';
-        $attributes['name'] = $this->getSearchKey();
-        $attributes['value'] = $this->getSearchValue();
-
-        return $this->parseAttributesForOutput($attributes);
-    }
-
-    /**
-     * Get the search button attributes string.
-     *
-     * @return string
-     */
-    public function getSearchButtonAttributesString(): string
-    {
-        $attributes = $this->getElementAttributes('search_submit');
-        $attributes['laratables-id'] = 'search-submit';
-        $attributes['type'] = 'submit';
-
-        return $this->parseAttributesForOutput($attributes);
-    }
-
-    /**
      * Check if we have a search request.
      *
      * @return bool
@@ -133,7 +103,7 @@ trait Search
     public function handleSearchRequest(): self
     {
         if (! $this->hasBaseQuery()) {
-            QueryException::baseQueryMissing(get_class($this));
+            return $this;
         }
 
         $this->handleSearchQuery($this->getSearchValue());

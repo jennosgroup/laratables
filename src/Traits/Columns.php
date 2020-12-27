@@ -19,10 +19,27 @@ trait Columns
      */
     public function getColumns(): array
     {
-        if (! $this->hasCheckbox()) {
-            return $this->columns;
+        return $this->getColumnsList();
+    }
+
+    /**
+     * Get the columns list.
+     *
+     * @return array
+     */
+    public function getColumnsList(): array
+    {
+        $columns = $this->columns;
+
+        if ($this->hasCheckbox()) {
+            $columns = array_merge(['checkbox' => ''], $columns);
         }
-        return array_merge(['checkbox' => ''], $this->columns);
+
+        if ($this->hasActions()) {
+            $columns = array_merge($columns, ['actions' => $this->getActionColumnTitle()]);
+        }
+
+        return $columns;
     }
 
     /**

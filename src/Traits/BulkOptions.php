@@ -6,8 +6,6 @@ trait BulkOptions
 {
     /**
      * Whether bulk options should be displayed.
-     *
-     * @var bool
      */
     protected bool $displayBulkOptions = false;
 
@@ -44,7 +42,7 @@ trait BulkOptions
     public function getBulkSelectAttributesString(): string
     {
         $attributes = $this->getElementAttributes('bulk_options_select');
-        $attributes = $this->getAndMergeElementAttributes('bulk_per_page_select', $attributes);
+        $attributes = $this->getAndMergeElementAttributes('wrapper_selects', $attributes);
         $attributes['name'] = $this->getBulkActionKey();
         $attributes['laratables-id'] = 'bulk-options-select';
 

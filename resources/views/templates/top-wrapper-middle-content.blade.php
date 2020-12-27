@@ -1,4 +1,4 @@
-<div {!! $table->getElementAttributesString('top_wrapper_middle_left_column') !!}>
+<div {!! $table->elementHtml('top_wrapper_middle_left_column') !!}>
 
     <!-- Bulk Options -->
     @if ($table->shouldDisplayBulkOptions())
@@ -12,7 +12,7 @@
 </div> <!-- end left column -->
 
 <!-- Right Column -->
-<div {!! $table->getElementAttributesString('top_wrapper_middle_right_column') !!}>
+<div {!! $table->elementHtml('top_wrapper_middle_right_column') !!}>
 
     {{-- Active Section --}}
     @if ($table->shouldDisplayActiveSection())

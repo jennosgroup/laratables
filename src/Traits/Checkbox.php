@@ -15,6 +15,11 @@ trait Checkbox
     protected string $checkboxName = 'laratables_checkbox';
 
     /**
+     * The name of the item field, that is used to set the checkbox value.
+     */
+    protected string $idField = 'id';
+
+    /**
      * Check whether checkbox is enabled.
      *
      * @return bool
@@ -35,7 +40,34 @@ trait Checkbox
     }
 
     /**
+     * Get the items id field.
+     *
+     * @return string
+     */
+    public function getIdField(): string
+    {
+        return $this->idField;
+    }
+
+    /**
+     * Filter if the individual row item has a checkbox.
+     *
+     * @param  mixed  $item
+     *
+     * @return bool
+     */
+    public function itemHasCheckbox($item): bool
+    {
+        return true;
+    }
+
+    /**
      * Automatic filter for the checkbox output in the head section.
+     *
+     * NOTE:: As part of the standard functionality of this package, before
+     * a Thead column title is rendered, a check is made to see if there
+     * is a method provided to over ride the default title. All we are doing
+     * here is taking advantage of that functionality.
      *
      * @param  string  $columnTitle
      * @param  int  $columnNumber
@@ -57,6 +89,11 @@ trait Checkbox
     /**
      * Automatic filter for the checkbox in the body section.
      *
+     * NOTE:: As part of the standard functionality of this package, before
+     * a Tbody column content is rendered, a check is made to see if there
+     * is a method provided to over ride the default content. All we are doing
+     * here is taking advantage of that functionality.
+     *
      * @param  mixed  $item
      * @param  int  $columnNumber
      * @param  int  $rowNumber
@@ -77,17 +114,21 @@ trait Checkbox
      */
     protected function getHeadCheckboxMarkup(int $columnNumber): string
     {
-        $containerAttributes = $this->getElementAttributes('checkbox_parent');
-        $containerAttributes = $this->getAndMergeElementAttributes('checkbox', $containerAttributes);
-        $containerAttributes['laratables-id'] = 'checkbox-parent-container';
+        $containerAttributes = $this->elementHtml('checkbox_parent')
+            ->mergeElement('checkbox')
+            ->override([
+                'laratables-id' => 'checkbox-parent-container',
+            ]);
 
-        $checkboxAttributes = $this->getElementAttributes('checkbox_input_parent');
-        $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
-        $checkboxAttributes['laratables-id'] = 'checkbox-parent';
-        $checkboxAttributes['type'] = 'checkbox';
+        $checkboxAttributes = $this->elementHtml('checkbox_input_parent')
+            ->mergeElement('checkbox_input')
+            ->override([
+                'laratables-id' => 'checkbox-parent',
+                'type' => 'checkbox',
+            ]);
 
-        $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
-        $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
+        $content = "<div ".$containerAttributes.">";
+        $content .= "<input ".$checkboxAttributes.">";
         $content .= "</div>";
 
         return $content;
@@ -102,21 +143,35 @@ trait Checkbox
      *
      * @return string
      */
-    protected function getBodyCheckboxMarkup($item, int $columnNumber, int $rowNumber): string
+    protected function getBodyCheckboxMarkup($item, int $columnNumber, int $rowNumber): ?string
     {
-        $containerAttributes = $this->getElementAttributes('checkbox_child');
-        $containerAttributes = $this->getAndMergeElementAttributes('checkbox', $containerAttributes);
-        $containerAttributes['laratables-id'] = 'checkbox-child-container';
+        $hasRowCheckbox = true;
 
-        $checkboxAttributes = $this->getElementAttributes('checkbox_input_child');
-        $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
-        $checkboxAttributes['laratables-id'] = 'checkbox-child';
-        $checkboxAttributes['type'] = 'checkbox';
-        $checkboxAttributes['value'] = $item->{$this->getIdField()};
-        $checkboxAttributes['name'] = $this->getCheckboxName().'[]';
+        if (method_exists($this, $method = 'itemHasCheckbox')) {
+            $hasRowCheckbox = $this->$method($item);
+        }
 
-        $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
-        $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
+        if (! $hasRowCheckbox) {
+            return null;
+        }
+
+        $containerAttributes = $this->elementHtml('checkbox_child')
+            ->mergeElement('checkbox')
+            ->override([
+                'laratables-id' => 'checkbox-child-container',
+            ]);
+
+        $checkboxAttributes = $this->elementHtml('checkbox_input_child')
+            ->mergeElement('checkbox_input')
+            ->override([
+                'laratables-id' => 'checkbox-child',
+                'type' => 'checkbox',
+                'value' => $item->{$this->getIdField()},
+                'name' => $this->getCheckboxName().'[]',
+            ]);
+
+        $content = "<div ".$containerAttributes.">";
+        $content .= "<input ".$checkboxAttributes.">";
         $content .= "</div>";
 
         return $content;
@@ -131,17 +186,21 @@ trait Checkbox
      */
     protected function getFootCheckboxMarkup(int $columnNumber): string
     {
-        $containerAttributes = $this->getElementAttributes('checkbox_parent');
-        $containerAttributes = $this->getAndMergeElementAttributes('checkbox', $containerAttributes);
-        $containerAttributes['laratables-id'] = 'checkbox-parent-container';
+        $containerAttributes = $this->elementHtml('checkbox_parent')
+            ->mergeElement('checkbox')
+            ->override([
+                'laratables-id' => 'checkbox-parent-container',
+            ]);
 
-        $checkboxAttributes = $this->getElementAttributes('checkbox_input_parent');
-        $checkboxAttributes = $this->getAndMergeElementAttributes('checkbox_input', $checkboxAttributes);
-        $checkboxAttributes['laratables-id'] = 'checkbox-parent';
-        $checkboxAttributes['type'] = 'checkbox';
+        $checkboxAttributes = $this->elementHtml('checkbox_input_parent')
+            ->mergeElement('checkbox_input')
+            ->override([
+                'laratables-id' => 'checkbox-parent',
+                'type' => 'checkbox',
+            ]);
 
-        $content = "<div ".$this->parseAttributesForOutput($containerAttributes).">";
-        $content .= "<input ".$this->parseAttributesForOutput($checkboxAttributes).">";
+        $content = "<div ".$containerAttributes.">";
+        $content .= "<input ".$checkboxAttributes.">";
         $content .= "</div>";
 
         return $content;
